@@ -1,0 +1,224 @@
+{
+  "classifier": {
+    "precision": 0.9912408759124087,
+    "recall": 0.8424317617866005,
+    "f1": 0.9107981220657277,
+    "roc_auc": 0.9813738993788834,
+    "confusion_matrix": [
+      [
+        4188,
+        6
+      ],
+      [
+        127,
+        679
+      ]
+    ]
+  },
+  "classifier_cv": {
+    "f1_mean": 0.8955038221883479,
+    "f1_std": 0.005595183094831903,
+    "auc_mean": 0.9772127896529359,
+    "auc_std": 0.004762881310872796,
+    "n_folds": 5
+  },
+  "prob_regressor": {
+    "mae": 0.0025227905152254977,
+    "rmse": 0.006869967980648133,
+    "r2": 0.9991677229784894
+  },
+  "rul_regressor": {
+    "mae_hours": 0.00029451509097847006,
+    "rmse_hours": 0.0005997920765747678,
+    "r2": 0.9948733822316534,
+    "mae_near_failure_hours": 0.00029451509097847006,
+    "near_failure_test_rows": 806
+  },
+  "rul_regressor_best_model": "lightgbm",
+  "rul_comparison": {
+    "lightgbm": {
+      "mae_hours": 0.00029451509097847006,
+      "rmse_hours": 0.0005997920765747678,
+      "r2": 0.9948733822316534,
+      "mae_near_failure_hours": 0.00029451509097847006,
+      "near_failure_test_rows": 806
+    },
+    "xgboost": {
+      "mae_hours": 0.0002992327801846245,
+      "rmse_hours": 0.0005890622728755062,
+      "r2": 0.9950551638298926,
+      "mae_near_failure_hours": 0.0002992327801846245,
+      "near_failure_test_rows": 806
+    },
+    "random_forest": {
+      "mae_hours": 0.00030682377694082554,
+      "rmse_hours": 0.0006614862029566163,
+      "r2": 0.9937645030617646,
+      "mae_near_failure_hours": 0.00030682377694082554,
+      "near_failure_test_rows": 806
+    },
+    "catboost": {
+      "mae_hours": 0.0004518063983083563,
+      "rmse_hours": 0.0006823131417190327,
+      "r2": 0.9933656716508924,
+      "mae_near_failure_hours": 0.0004518063983083563,
+      "near_failure_test_rows": 806
+    }
+  },
+  "isolation_forest": {
+    "n_estimators": 200,
+    "contamination": 0.1,
+    "train_samples": 16561,
+    "anomaly_rate": 0.2154
+  },
+  "top_features_xgb": [
+    [
+      "health_score_ema",
+      0.16495303809642792
+    ],
+    [
+      "health_score_rmean_5",
+      0.08501200377941132
+    ],
+    [
+      "transmission_temp_rmean_20",
+      0.04077568277716637
+    ],
+    [
+      "transmission_temp_rmin_20",
+      0.02727820724248886
+    ],
+    [
+      "health_score_rmean_10",
+      0.01595223881304264
+    ],
+    [
+      "vehicle_speed_rmin_20",
+      0.013442141003906727
+    ],
+    [
+      "engine_load_pct_roc_10",
+      0.01160788256675005
+    ],
+    [
+      "brake_temp_lag20",
+      0.007736497558653355
+    ],
+    [
+      "health_score_rmin_20",
+      0.006640945095568895
+    ],
+    [
+      "humidity_rmean_20",
+      0.006492356304079294
+    ],
+    [
+      "humidity_rmin_20",
+      0.006473973859101534
+    ],
+    [
+      "coolant_temp_rmin_20",
+      0.0062552327290177345
+    ],
+    [
+      "ambient_temp_rmean_20",
+      0.005834862124174833
+    ],
+    [
+      "suspension_pressure_ema",
+      0.005298043601214886
+    ],
+    [
+      "health_score_rmin_10",
+      0.005132685415446758
+    ]
+  ],
+  "shap": {
+    "top_shap_features": [
+      [
+        "health_score_ema",
+        0.8022074699401855
+      ],
+      [
+        "transmission_temp_rmean_20",
+        0.4625101387500763
+      ],
+      [
+        "health_score_rmean_5",
+        0.45678526163101196
+      ],
+      [
+        "transmission_temp_rmax_20",
+        0.45627400279045105
+      ],
+      [
+        "health_score_rmean_10",
+        0.3567323088645935
+      ],
+      [
+        "vehicle_speed_rmin_20",
+        0.3385777175426483
+      ],
+      [
+        "carryback_pct_rmean_20",
+        0.22139963507652283
+      ],
+      [
+        "health_score_rmin_20",
+        0.21142683923244476
+      ],
+      [
+        "health_score_rstd_20",
+        0.19162364304065704
+      ],
+      [
+        "carryback_pct_rmin_10",
+        0.18884578347206116
+      ],
+      [
+        "carryback_pct_ema",
+        0.18097178637981415
+      ],
+      [
+        "humidity_rmin_10",
+        0.1727217137813568
+      ],
+      [
+        "health_score_rmin_10",
+        0.16476985812187195
+      ],
+      [
+        "ambient_temp_rmin_20",
+        0.15534697473049164
+      ],
+      [
+        "carryback_pct_rmin_20",
+        0.15120373666286469
+      ],
+      [
+        "bearing_temp_rmax_20",
+        0.14820049703121185
+      ],
+      [
+        "vibration_z_rmean_20",
+        0.1474827378988266
+      ],
+      [
+        "brake_temp_rmin_10",
+        0.1402125358581543
+      ],
+      [
+        "coolant_temp_rmin_20",
+        0.13934436440467834
+      ],
+      [
+        "humidity_rmin_20",
+        0.1382388472557068
+      ]
+    ],
+    "computed": true
+  },
+  "n_features": 575,
+  "n_train_rows": 20000,
+  "n_test_rows": 5000
+}

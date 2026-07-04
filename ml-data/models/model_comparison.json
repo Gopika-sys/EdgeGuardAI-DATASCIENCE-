@@ -1,0 +1,30 @@
+{
+  "lightgbm": {
+    "mae_hours": 0.00029451509097847006,
+    "rmse_hours": 0.0005997920765747678,
+    "r2": 0.9948733822316534,
+    "mae_near_failure_hours": 0.00029451509097847006,
+    "near_failure_test_rows": 806
+  },
+  "xgboost": {
+    "mae_hours": 0.0002992327801846245,
+    "rmse_hours": 0.0005890622728755062,
+    "r2": 0.9950551638298926,
+    "mae_near_failure_hours": 0.0002992327801846245,
+    "near_failure_test_rows": 806
+  },
+  "random_forest": {
+    "mae_hours": 0.00030682377694082554,
+    "rmse_hours": 0.0006614862029566163,
+    "r2": 0.9937645030617646,
+    "mae_near_failure_hours": 0.00030682377694082554,
+    "near_failure_test_rows": 806
+  },
+  "catboost": {
+    "mae_hours": 0.0004518063983083563,
+    "rmse_hours": 0.0006823131417190327,
+    "r2": 0.9933656716508924,
+    "mae_near_failure_hours": 0.0004518063983083563,
+    "near_failure_test_rows": 806
+  }
+}

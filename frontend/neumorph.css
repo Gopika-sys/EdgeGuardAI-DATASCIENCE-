@@ -1,0 +1,475 @@
+/* ============================================================
+   EdgeGuard AI — Neumorphism (Light) — the only theme.
+   Always applied when body has the .theme-neumorph class.
+   Combines with index.css (which provides the base dark theme).
+   ============================================================ */
+
+body.theme-neumorph {
+    --bg:           #e6e9f0;
+    --bg-elev:      #e6e9f0;
+    --bg-sunk:      #d1d5db;
+    --surface:      #e6e9f0;
+    --surface-2:    #eef1f6;
+    --border:       #ffffff;
+    --text:         #000000;
+    --text-soft:    #000000;
+    --text-mute:    #000000;
+    --accent:       #3b82f6;
+    --accent-2:     #22c55e;
+    --danger:       #ef4444;
+    --warn:         #f59e0b;
+    --ok:           #22c55e;
+    --shadow-out:   8px 8px 16px #c5c8cf, -8px -8px 16px #ffffff;
+    --shadow-out-sm:4px 4px 8px #c5c8cf, -4px -4px 8px #ffffff;
+    --shadow-in:    inset 6px 6px 12px #c5c8cf, inset -6px -6px 12px #ffffff;
+    --shadow-in-sm: inset 3px 3px 6px #c5c8cf, inset -3px -3px 6px #ffffff;
+    --shadow-hover: 10px 10px 20px #bcc0c7, -10px -10px 20px #ffffff;
+
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ---------- Core surface rework ---------- */
+body.theme-neumorph .app-container,
+body.theme-neumorph .sidebar,
+body.theme-neumorph .card,
+body.theme-neumorph .glass-panel,
+body.theme-neumorph .topbar,
+body.theme-neumorph .status-pill,
+body.theme-neumorph .kpi-card,
+body.theme-neumorph .sensor-card,
+body.theme-neumorph .truck-card,
+body.theme-neumorph .sop-card,
+body.theme-neumorph .fleet-card,
+body.theme-neumorph .alerts-list li,
+body.theme-neumorph .copilot-box,
+body.theme-neumorph .twin-panel,
+body.theme-neumorph .twin-readout,
+body.theme-neumorph .modal,
+body.theme-neumorph .drawer,
+body.theme-neumorph .nav-card,
+body.theme-neumorph .roi-banner,
+body.theme-neumorph .health-card,
+body.theme-neumorph .engine-pip,
+body.theme-neumorph .ai-pip,
+body.theme-neumorph .alert-banner,
+body.theme-neumorph .ps-strip {
+    background: var(--surface);
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-out);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 18px;
+}
+
+body.theme-neumorph .card,
+body.theme-neumorph .kpi-card,
+body.theme-neumorph .sensor-card,
+body.theme-neumorph .truck-card,
+body.theme-neumorph .sop-card,
+body.theme-neumorph .fleet-card,
+body.theme-neumorph .twin-panel,
+body.theme-neumorph .twin-readout {
+    transition: box-shadow .25s ease, transform .25s ease;
+}
+body.theme-neumorph .card:hover,
+body.theme-neumorph .kpi-card:hover,
+body.theme-neumorph .sensor-card:hover,
+body.theme-neumorph .truck-card:hover,
+body.theme-neumorph .sop-card:hover,
+body.theme-neumorph .fleet-card:hover,
+body.theme-neumorph .twin-panel:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* ---------- Sidebar ---------- */
+body.theme-neumorph .sidebar {
+    border-radius: 0 24px 24px 0;
+    padding: 24px 18px;
+    background: var(--bg-elev);
+}
+body.theme-neumorph .sidebar .logo {
+    background: var(--surface);
+    box-shadow: var(--shadow-out-sm);
+    padding: 14px 18px;
+    border-radius: 18px;
+    margin-bottom: 18px;
+}
+body.theme-neumorph .sidebar .nav li {
+    background: transparent;
+    border-radius: 14px;
+    box-shadow: none;
+    margin: 4px 0;
+    color: var(--text-soft);
+    transition: all .2s ease;
+}
+body.theme-neumorph .sidebar .nav li:hover {
+    background: var(--surface);
+    box-shadow: var(--shadow-out-sm);
+    color: var(--text);
+}
+body.theme-neumorph .sidebar .nav li.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: var(--shadow-out-sm);
+}
+body.theme-neumorph .sidebar .nav li.active svg { stroke: #fff; }
+
+/* ---------- Topbar ---------- */
+body.theme-neumorph .topbar {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in-sm);
+    border-radius: 18px;
+    margin-bottom: 16px;
+    padding: 16px 22px;
+}
+body.theme-neumorph .topbar h1 {
+    color: var(--text);
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+}
+body.theme-neumorph .topbar .subtitle { color: var(--text-mute); }
+
+/* ---------- Buttons ---------- */
+body.theme-neumorph .btn,
+body.theme-neumorph button.btn,
+body.theme-neumorph .status-pill {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-out-sm);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: all .2s ease;
+}
+body.theme-neumorph .btn:hover,
+body.theme-neumorph button.btn:hover,
+body.theme-neumorph .status-pill:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+}
+body.theme-neumorph .btn:active,
+body.theme-neumorph button.btn:active {
+    box-shadow: var(--shadow-in-sm);
+    transform: translateY(0);
+}
+body.theme-neumorph .btn.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: var(--shadow-out-sm);
+}
+body.theme-neumorph .btn.primary:hover {
+    box-shadow: var(--shadow-hover);
+    filter: brightness(1.05);
+}
+
+/* ---------- Inputs ---------- */
+body.theme-neumorph input[type="text"],
+body.theme-neumorph input[type="number"],
+body.theme-neumorph input[type="email"],
+body.theme-neumorph input[type="password"],
+body.theme-neumorph textarea,
+body.theme-neumorph select {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-in-sm);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 10px 14px;
+    transition: box-shadow .2s ease;
+}
+body.theme-neumorph input:focus,
+body.theme-neumorph textarea:focus,
+body.theme-neumorph select:focus {
+    outline: none;
+    box-shadow: var(--shadow-in);
+}
+body.theme-neumorph input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    box-shadow: var(--shadow-in-sm);
+    border-radius: 999px;
+    height: 8px;
+}
+body.theme-neumorph input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius: 50%;
+    box-shadow: var(--shadow-out-sm);
+    cursor: pointer;
+}
+
+/* ---------- Twin wrap (3D + 2D) ---------- */
+body.theme-neumorph .twin-wrap {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in);
+    border-radius: 18px;
+}
+body.theme-neumorph .twin-wrap::before,
+body.theme-neumorph .twin-wrap::after { display: none; }
+body.theme-neumorph .twin-svg .chassis-path { filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.12)); }
+
+/* ---------- ML Gauge ---------- */
+body.theme-neumorph .gauge-card,
+body.theme-neumorph .gauge,
+body.theme-neumorph .ps-strip {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in);
+    border-radius: 18px;
+}
+
+/* ---------- Charts (light bg) ---------- */
+body.theme-neumorph .chart-card,
+body.theme-neumorph canvas { background: transparent; }
+
+/* ---------- Mini progress bar inside each sensor card (sunken track) ---------- */
+body.theme-neumorph .chart-bar {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in-sm);
+}
+
+/* ---------- Failure Risk gauge — neumorph variant ---------- */
+body.theme-neumorph .circular-progress {
+    box-shadow: var(--shadow-out);
+}
+body.theme-neumorph .circular-progress[data-state="healthy"] {
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.25), var(--shadow-out);
+}
+body.theme-neumorph .inner-circle { background: var(--surface); box-shadow: var(--shadow-in); }
+body.theme-neumorph .gauge-state-tag {
+    background: var(--surface);
+    box-shadow: var(--shadow-out-sm);
+    border: 1px solid transparent;
+}
+
+/* ---------- Health ring (svg) ---------- */
+body.theme-neumorph .health-ring-bg { stroke: rgba(0, 0, 0, 0.08); }
+
+/* ---------- Empty state (alerts) ---------- */
+body.theme-neumorph .empty-state .empty-icon {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in);
+    border: 1px solid transparent;
+}
+body.theme-neumorph .empty-state .empty-title { color: var(--text); }
+body.theme-neumorph .empty-state .empty-text,
+body.theme-neumorph .empty-state .empty-health-note { color: var(--text-soft); }
+body.theme-neumorph .empty-state .empty-meta-lbl,
+body.theme-neumorph .mini-lbl,
+body.theme-neumorph .detail-item .label { color: #525870; }
+body.theme-neumorph .copilot-box p { color: var(--text); }
+body.theme-neumorph .card-hero {
+    box-shadow: var(--shadow-out), 0 0 0 1px rgba(59, 130, 246, 0.12);
+}
+body.theme-neumorph .card-secondary {
+    box-shadow: var(--shadow-out-sm);
+}
+body.theme-neumorph .card-secondary:hover {
+    box-shadow: var(--shadow-out-sm);
+    transform: none;
+}
+body.theme-neumorph .engine-pip {
+    padding: 6px 4px;
+}
+body.theme-neumorph .empty-state .empty-meta { border-top-color: rgba(0, 0, 0, 0.06); }
+body.theme-neumorph .empty-state .empty-health-note {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.2);
+    color: #3d4a63;
+}
+
+/* ---------- Engine pip status text + meta footer ---------- */
+body.theme-neumorph .engines-meta { border-top-color: rgba(0, 0, 0, 0.06); }
+
+/* ---------- Tooltip (light theme) ---------- */
+body.theme-neumorph .global-tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: var(--text);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+body.theme-neumorph .global-tooltip::before {
+    background: rgba(255, 255, 255, 0.95);
+    border-left-color: rgba(59, 130, 246, 0.4);
+    border-top-color: rgba(59, 130, 246, 0.4);
+}
+
+/* ---------- Sensor cards (sunken values) ---------- */
+body.theme-neumorph .sensor-value {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in-sm);
+    border-radius: 12px;
+    padding: 6px 10px;
+}
+
+/* ---------- Critical / alerts ---------- */
+body.theme-neumorph .critical-banner {
+    background: linear-gradient(90deg, var(--danger), #b91c1c);
+    color: white;
+    box-shadow: 0 0 24px rgba(239,68,68,0.5), var(--shadow-out-sm);
+    border-radius: 999px;
+}
+body.theme-neumorph .alert-critical,
+body.theme-neumorph .sev-critical {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: white;
+    box-shadow: var(--shadow-out-sm);
+}
+body.theme-neumorph .alert-warning,
+body.theme-neumorph .sev-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    box-shadow: var(--shadow-out-sm);
+}
+
+/* ---------- Pips / engine strip ---------- */
+body.theme-neumorph .ai-pip,
+body.theme-neumorph .engine-pip {
+    background: var(--surface);
+    box-shadow: var(--shadow-out-sm);
+    border-radius: 12px;
+    padding: 10px;
+}
+body.theme-neumorph .ai-pip .dot { box-shadow: 0 0 6px currentColor; }
+
+/* ---------- Status pills (live, healthy, etc) ---------- */
+body.theme-neumorph .status-pill.ghost { background: var(--surface); }
+body.theme-neumorph .status-pill .dot { box-shadow: 0 0 8px currentColor; }
+
+/* ---------- Tables ---------- */
+body.theme-neumorph table,
+body.theme-neumorph .table-card {
+    background: var(--surface);
+    box-shadow: var(--shadow-out-sm);
+    border-radius: 14px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+body.theme-neumorph th,
+body.theme-neumorph td {
+    color: var(--text);
+    border-color: rgba(0,0,0,0.06);
+    padding: 10px 14px;
+}
+body.theme-neumorph tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+/* ---------- Drawer (slide-in) ---------- */
+body.theme-neumorph .drawer {
+    background: var(--bg-elev);
+    box-shadow: -12px 0 32px rgba(0,0,0,0.18);
+}
+
+/* ---------- Nav cards (Engine status strip etc) ---------- */
+body.theme-neumorph .nav-card {
+    box-shadow: var(--shadow-out-sm);
+    padding: 12px;
+}
+
+/* ---------- ROi banner (raised) ---------- */
+body.theme-neumorph .roi-banner,
+body.theme-neumorph .roi-big {
+    background: var(--surface);
+    box-shadow: var(--shadow-out);
+    color: var(--text);
+    border-radius: 22px;
+}
+body.theme-neumorph .roi-banner .roi-num {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ---------- Toggles (neuer switch) ---------- */
+body.theme-neumorph .switch .slider {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in-sm);
+    border: 1px solid transparent;
+}
+body.theme-neumorph .switch input:checked + .slider {
+    box-shadow: var(--shadow-out-sm);
+}
+
+/* ---------- Status badges (high-contrast chips) ---------- */
+body.theme-neumorph .badge,
+body.theme-neumorph .status-badge {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in-sm);
+    color: var(--text-soft);
+    border-radius: 999px;
+    padding: 4px 12px;
+}
+body.theme-neumorph .badge.ok { color: var(--ok); }
+body.theme-neumorph .badge.warn { color: var(--warn); }
+body.theme-neumorph .badge.bad { color: var(--danger); }
+
+/* ---------- Scrollbar ---------- */
+body.theme-neumorph ::-webkit-scrollbar { width: 10px; height: 10px; }
+body.theme-neumorph ::-webkit-scrollbar-track { background: var(--bg-elev); }
+body.theme-neumorph ::-webkit-scrollbar-thumb {
+    background: var(--surface);
+    box-shadow: var(--shadow-in-sm);
+    border-radius: 999px;
+}
+body.theme-neumorph ::-webkit-scrollbar-thumb:hover { background: #b6bccd; }
+
+/* ---------- Selection ---------- */
+body.theme-neumorph ::selection { background: var(--accent); color: #fff; }
+
+/* ---------- Stress overlay (subtle) ---------- */
+body.theme-neumorph .stress-overlay path { stroke: var(--danger); opacity: 0.6; }
+
+/* ---------- Live tag (raised pill) ---------- */
+body.theme-neumorph .live-tag {
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-in-sm);
+    color: var(--text-soft);
+    border-radius: 999px;
+}
+body.theme-neumorph .live-tag .live-dot { box-shadow: 0 0 6px var(--ok); }
+
+/* ---------- Tipper truck (3D) tweaks ---------- */
+body.theme-neumorph .twin-canvas-3d { background: var(--bg-elev) !important; border-radius: 18px; }
+
+/* ---------- Node glow (3D) ---------- */
+body.theme-neumorph #node_ .node-halo,
+body.theme-neumorph .node .node-halo { filter: drop-shadow(0 0 4px currentColor); }
+
+/* ---------- Geofence map card ---------- */
+body.theme-neumorph #geoMap {
+    box-shadow: var(--shadow-in);
+    border-radius: 18px;
+    background: var(--bg-elev);
+}
+
+/* ---------- Modal / popup (Leaflet) ---------- */
+body.theme-neumorph .leaflet-popup-content-wrapper,
+body.theme-neumorph .leaflet-popup-tip {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-out-sm);
+    border-radius: 12px;
+}
+
+/* ---------- Animated 'neumerized' hover for primary CTA ---------- */
+body.theme-neumorph .btn.primary,
+body.theme-neumorph .sidebar .nav li.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: var(--shadow-out-sm), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ---------- Gentle text shadow on light surface for readability ---------- */
+body.theme-neumorph .text-glow,
+body.theme-neumorph .gradient-text {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}

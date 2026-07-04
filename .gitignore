@@ -1,0 +1,46 @@
+# Secrets - never commit these
+.env
+*.env
+secrets.py
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Local databases (SQLite files from early testing)
+*.db
+*.sqlite
+*.sqlite3
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode/
+.idea/
+
+# Wokwi (keep diagram.json and sketch.ino, ignore any local cache)
+.wokwi/
+
+# Generated data (optional - comment out if you WANT the CSV in git)
+# edgeguard_training_data.csv
+
+# ---------------------------------------------------------------------------
+# YOLOv8 / Ultralytics transient output — never commit these
+# ---------------------------------------------------------------------------
+runs/                # Ultralytics native training/val output
+yolov8*.pt           # downloaded base weights (only commit fine-tuned best.pt)
+last.pt              # intermediate checkpoint; keep only best.pt
+
+# ---------------------------------------------------------------------------
+# Transient runtime artefacts — never commit
+# ---------------------------------------------------------------------------
+*.log
+*.err.log
+predictions_log.jsonl
+api                  # local notes file (has been used for plaintext API keys)

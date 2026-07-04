@@ -1,0 +1,23 @@
+# EdgeGuard AI — YOLOv8 Dataset Config
+# Module 05 of ml work.txt specification.
+#
+# This file is consumed by Ultralytics YOLO at training time:
+#     yolo train data=engine1_vision/data.yaml model=yolov8n.pt
+#
+# The `path:` is absolute because Ultralytics resolves relative `path:`
+# values against a default `datasets/` working dir rather than against
+# this file, which would break the layout used here. The dataset/ folder
+# is built by `python engine1_vision/dataset.py --n 500`.
+
+path: D:/Projects/EdgeGuardAi_repo/edgeguard/ml-data/engine1_vision/dataset
+train: images/train
+val:   images/val
+test:  images/test
+
+# 4 classes (kept in sync with synth_frames.py:CLASS_MAP)
+nc: 4
+names:
+  0: truck_bed
+  1: payload
+  2: carryback
+  3: hydraulic_ram

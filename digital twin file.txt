@@ -1,0 +1,91 @@
+Build a digital twin dashboard for EdgeGuard AI — a predictive maintenance system for Tata Signa 4825.TK tipper trucks.
+
+CONTEXT:
+- We have a working FastAPI backend running at http://localhost:8000
+- Key endpoints:
+  - GET /readings/latest → latest sensor values per sensor type
+  - GET /predictions/latest → latest ML model predictions (failure_probability, rul_hours, component)
+  - GET /alerts/active → unacknowledged critical alerts
+- Sensors: temperature (°C), vibration (g), oil_pressure (bar), hydraulic_pressure (bar), suspension_pressure (bar), battery_voltage (V)
+- ML outputs: failure_probability (0-1), rul_hours (remaining useful life), severity (healthy/warning/critical)
+
+BUILD THIS:
+A single-page HTML/CSS/JS digital twin dashboard (no framework needed, vanilla JS is fine) with these sections:
+
+1. TRUCK SCHEMATIC (main visual, left side, ~60% width)
+   - SVG side-view silhouette of a heavy tipper truck (simplified geometric shapes — cab, chassis, tipper bed, 3 wheels, exhaust)
+   - 6 labeled sensor nodes as glowing circles overlaid on the correct truck location:
+     * Engine (cab area) → temperature sensor
+     * Axle bearing (front wheel hub) → vibration sensor  
+     * Oil system (engine bay) → oil_pressure sensor
+     * Hydraulic ram (tipper bed hinge) → hydraulic_pressure sensor
+     * Suspension (rear axle) → suspension_pressure sensor
+     * Battery (cab underside) → battery_voltage sensor
+   - Each node color reflects health: GREEN (#22c55e) = healthy, AMBER (#f59e0b) = warning, RED (#ef4444) = critical, PULSE ANIMATION when critical
+   - Thin connector lines between nodes showing the documented degradation cascade: engine → axle bearing → oil system → hydraulic ram
+   - When failure probability > 0.6, animate the cascade: lines glow and pulse in sequence showing the degradation spreading
+
+2. LIVE SENSOR PANEL (right side, top half)
+   - 6 sensor cards in a 2x3 grid
+   - Each card: sensor name, current value + unit, a small sparkline (last 20 readings), trend arrow (↑↓→), health badge
+   - Color-coded border matching the truck node color
+   - Update every 3 seconds
+
+3. PREDICTION PANEL (right side, bottom half)
+   - Failure probability: large circular gauge (0-100%), color transitions green→amber→red
+   - RUL display: "Estimated X.X hours remaining" with a countdown bar
+   - Active alerts list: each alert shows component, severity badge, message, timestamp
+   - Copilot explanation box: shows the latest alert message in plain language
+
+4. HEADER BAR
+   - EdgeGuard AI logo text
+   - "TRUCK1 — Tata Signa 4825.TK" subtitle  
+   - Live clock + uptime counter
+   - Connection status indicator (green dot = MQTT live, red = disconnected)
+   - Overall fleet health score (100 - failure_probability*100, shown as %)
+
+5. DEGRADATION ANIMATION
+   - As failure_probability increases from 0 → 1, the truck schematic visually degrades:
+     * 0.0-0.3: all nodes green, truck looks healthy
+     * 0.3-0.6: engine and bearing nodes turn amber, connector lines between them start glowing yellow
+     * 0.6-0.8: cascade spreads — oil and hydraulic nodes turn red, crack/stress visual overlays appear on the chassis SVG paths
+     * 0.8-1.0: full critical state — all nodes red and pulsing, chassis overlay darkens, "CRITICAL FAILURE IMMINENT" banner appears
+   - Smooth CSS transitions between all states (0.8s ease)
+
+6. TIMELINE REPLAY (bottom strip, optional but add the UI even if not wired)
+   - A scrubber bar showing the last 10 minutes of data
+   - Play/pause button
+   - Current time display
+
+TECHNICAL REQUIREMENTS:
+- Single HTML file (inline CSS and JS), no external frameworks
+- Poll http://localhost:8000/readings/latest every 3 seconds for live data
+- Poll http://localhost:8000/predictions/latest every 5 seconds for ML output
+- Poll http://localhost:8000/alerts/active every 5 seconds for alerts
+- Store last 20 readings per sensor in memory for sparklines (use a circular buffer)
+- Handle CORS and fetch errors gracefully — show "No data" state without crashing
+- Dark theme: background #0f172a, cards #1e293b, accent #3b82f6
+- Must work when opened directly as a file (file://) or served by python -m http.server
+- No authentication needed
+
+SENSOR HEALTH THRESHOLDS (use these for node colors):
+- temperature: healthy < 75°C, warning 75-90°C, critical > 90°C
+- vibration: healthy < 0.8g, warning 0.8-1.5g, critical > 1.5g
+- oil_pressure: healthy > 2.5 bar, warning 1.5-2.5 bar, critical < 1.5 bar
+- hydraulic_pressure: healthy > 180 bar, warning 120-180 bar, critical < 120 bar
+- suspension_pressure: healthy > 5.0 bar, warning 3.5-5.0 bar, critical < 3.5 bar
+- battery_voltage: healthy > 22.0V, warning 21.0-22.0V, critical < 21.0V
+
+DEMO MODE:
+- If the backend is unreachable, automatically enter demo mode with simulated data that runs the full degradation cycle (healthy → warning → critical → reset) on a 90-second loop, so the dashboard can be shown even without a live backend
+- Show a small "DEMO MODE" badge in the header when running on simulated data
+
+Make the truck schematic the visual centrepiece — this is what judges will look at first. The SVG should be detailed enough to clearly represent a tipper truck (cab on the left, flat chassis, raised tipper bed on the right, visible wheels and suspension geometry) without needing any image files.
+
+After follow up with these refinements once it builds the first version:
+
+"The truck SVG doesn't look enough like a tipper — make the cab more boxy, add a visible hydraulic ram under the tipper bed, and add dust/exhaust particle effects when the engine node is critical"
+"Wire the sparklines to actually show the degradation curve — during demo mode the temperature sparkline should show a rising trend, not flat noise"
+"Add a side panel that slides in when you click a sensor node, showing the full history chart for that sensor plus the SOP recommendation text"
+
+Save the output as frontend/digital_twin.html

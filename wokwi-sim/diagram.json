@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "author": "EdgeGuard AI Team",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-ds18b20",
+      "id": "temp1",
+      "top": -80,
+      "left": 200,
+      "attrs": { "temperature": "65" }
+    },
+    {
+      "type": "wokwi-mpu6050",
+      "id": "vib1",
+      "top": -20,
+      "left": 200,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "oilpot",
+      "top": 40,
+      "left": 200,
+      "attrs": { "value": "70" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "hydpot",
+      "top": 100,
+      "left": 200,
+      "attrs": { "value": "75" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "susppot",
+      "top": 160,
+      "left": 200,
+      "attrs": { "value": "70" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "battpot",
+      "top": 220,
+      "left": 200,
+      "attrs": { "value": "90" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "alertled",
+      "top": 280,
+      "left": 200,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+
+    [ "temp1:GND", "esp:GND.1", "black", [] ],
+    [ "temp1:VCC", "esp:3V3", "red", [] ],
+    [ "temp1:DQ", "esp:D4", "green", [] ],
+
+    [ "vib1:GND", "esp:GND.2", "black", [] ],
+    [ "vib1:VCC", "esp:3V3", "red", [] ],
+    [ "vib1:SCL", "esp:D22", "yellow", [] ],
+    [ "vib1:SDA", "esp:D21", "blue", [] ],
+
+    [ "oilpot:GND", "esp:GND.3", "black", [] ],
+    [ "oilpot:VCC", "esp:3V3", "red", [] ],
+    [ "oilpot:SIG", "esp:D34", "orange", [] ],
+
+    [ "hydpot:GND", "esp:GND.1", "black", [] ],
+    [ "hydpot:VCC", "esp:3V3", "red", [] ],
+    [ "hydpot:SIG", "esp:D35", "orange", [] ],
+
+    [ "susppot:GND", "esp:GND.2", "black", [] ],
+    [ "susppot:VCC", "esp:3V3", "red", [] ],
+    [ "susppot:SIG", "esp:D32", "orange", [] ],
+
+    [ "battpot:GND", "esp:GND.3", "black", [] ],
+    [ "battpot:VCC", "esp:3V3", "red", [] ],
+    [ "battpot:SIG", "esp:D33", "orange", [] ],
+
+    [ "alertled:A", "esp:D2", "red", [] ],
+    [ "alertled:C", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}

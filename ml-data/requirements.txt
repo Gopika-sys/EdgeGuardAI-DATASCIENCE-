@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn
+xgboost
+joblib
+matplotlib
+requests
+supabase
+python-dotenv
+shap
+
+# AI Engine 1 (Computer Vision) — YOLOv8 fine-tune + inference
+# torch is heavy (~2GB). On CPU-only hosts, prefer:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+ultralytics>=8.0.0
+torch>=2.0.0

@@ -1,0 +1,33 @@
+{
+  "headline": {
+    "mAP50": 0.9123,
+    "mAP50-95": 0.7,
+    "precision": 0.9279,
+    "recall": 0.9183,
+    "F1": 0.9123
+  },
+  "per_class": {
+    "truck_bed": {
+      "precision": 0.9721794358569729,
+      "recall": 1.0,
+      "f1": 0.995
+    },
+    "payload": {
+      "precision": 0.9341694337647555,
+      "recall": 1.0,
+      "f1": 0.995
+    },
+    "carryback": {
+      "precision": 0.8272462595368437,
+      "recall": 0.6730769230769231,
+      "f1": 0.6643715578176115
+    },
+    "hydraulic_ram": {
+      "precision": 0.9778455223329412,
+      "recall": 1.0,
+      "f1": 0.995
+    }
+  },
+  "weights": "D:\\Projects\\EdgeGuardAi_repo\\edgeguard\\ml-data\\engine1_vision\\models\\best.pt",
+  "data_yaml": "D:\\Projects\\EdgeGuardAi_repo\\edgeguard\\ml-data\\engine1_vision\\data.yaml"
+}

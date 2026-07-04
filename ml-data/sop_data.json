@@ -1,0 +1,162 @@
+[
+    {
+        "title": "SOP-HYD-01a: Hydraulic Ram Overload — Warning",
+        "component": "hydraulic_pressure",
+        "severity": "warning",
+        "content_chunk": "Step 1: Note elevated hydraulic pressure readings (250–400 bar above baseline). Step 2: Reduce tipping speed by 50% and avoid full-extension lifts. Step 3: Inspect hydraulic fluid level in the reservoir — top up if below MIN mark with ISO VG 46 fluid. Step 4: Check for minor seepage at ram cylinder seals and hose fittings. Step 5: Log reading and schedule full hydraulic inspection within 8 operating hours.",
+        "tools_required": "Hydraulic fluid (ISO VG 46), dipstick, inspection mirror, torque wrench",
+        "estimated_downtime": "30 minutes (inspection only)"
+    },
+    {
+        "title": "SOP-HYD-01b: Hydraulic Ram Overload — Critical",
+        "component": "hydraulic_pressure",
+        "severity": "critical",
+        "content_chunk": "IMMEDIATE ACTION REQUIRED. Step 1: HALT all tipping operations immediately — lower the bed slowly using gravity descent if powered descent is unresponsive. Step 2: Shut down the PTO (Power Take-Off) drive. Step 3: Visually inspect the primary ram seals for blowouts — look for fluid spray patterns on the chassis. Step 4: Check the main relief valve for seizure (rapid pressure oscillation indicates valve chatter). Step 5: Do NOT attempt field repair — arrange tow to maintenance bay. Step 6: Replace main relief valve, all ram seals, and flush hydraulic lines before returning to service.",
+        "tools_required": "Seal kit (OEM Part #TK-HYD-4825), hydraulic jack, pressure gauge (0-700 bar), fluid drain pan",
+        "estimated_downtime": "4–6 hours"
+    },
+    {
+        "title": "SOP-SUS-02a: Air Suspension Fatigue — Warning",
+        "component": "suspension_pressure",
+        "severity": "warning",
+        "content_chunk": "Step 1: Note intermittent suspension pressure drops or fluctuations exceeding ±1.5 bar from baseline. Step 2: Reduce vehicle speed to 40 km/h and avoid rough terrain. Step 3: Visually check air bag condition for surface cracking or abrasion marks. Step 4: Test air compressor output — should hold 8 bar steady within 30 seconds. Step 5: Check for slow leaks using soapy water spray on all air line fittings. Step 6: Schedule air bag replacement at next service window within 24 hours.",
+        "tools_required": "Soapy water spray bottle, pressure gauge, tyre inflator (backup)",
+        "estimated_downtime": "45 minutes (inspection)"
+    },
+    {
+        "title": "SOP-SUS-02b: Air Suspension Fatigue — Critical",
+        "component": "suspension_pressure",
+        "severity": "critical",
+        "content_chunk": "IMMEDIATE ACTION REQUIRED. Step 1: Reduce speed to below 10 km/h immediately. Step 2: Route to the nearest level ground — do NOT continue on inclines. Step 3: High variance or spiking in suspension pressure indicates a ruptured air bag or failing leaf spring mount. Step 4: Engage parking brake on level ground and inspect the axle alignment visually. Step 5: If air bag rupture is confirmed, do NOT drive — the chassis will contact the axle causing frame damage. Step 6: Replace the affected air suspension unit and inspect adjacent bags for sympathetic damage. Step 7: After replacement, perform a full axle alignment check.",
+        "tools_required": "Air bag unit (OEM Part #TK-SUS-4825), trolley jack, axle stands, alignment laser",
+        "estimated_downtime": "3–5 hours"
+    },
+    {
+        "title": "SOP-TMP-03a: Engine Overheating — Warning",
+        "component": "temperature",
+        "severity": "warning",
+        "content_chunk": "Step 1: Engine temperature exceeding 95°C but below 110°C. Step 2: Reduce engine load — downshift and reduce speed. Step 3: Turn on cabin heater to maximum to act as a secondary radiator. Step 4: Check coolant level in the expansion tank — top up with pre-mixed coolant if below MIN. Step 5: Inspect radiator fins visually for mud/debris blockage. Step 6: Listen for fan clutch engagement — a non-engaging fan is the most common cause. Step 7: Schedule cooling system inspection within 12 hours. Monitor temperature every 5 minutes until stable.",
+        "tools_required": "Pre-mixed coolant (OAT type), compressed air for radiator cleaning, infrared thermometer",
+        "estimated_downtime": "20 minutes (field intervention)"
+    },
+    {
+        "title": "SOP-TMP-03b: Engine Overheating Cascade — Critical",
+        "component": "temperature",
+        "severity": "critical",
+        "content_chunk": "IMMEDIATE ACTION REQUIRED. Step 1: Engine temperature exceeding 110°C. IDLE the engine immediately — do NOT shut off abruptly unless oil pressure is also critically low (see SOP-OIL-05b). Step 2: Abrupt shutdown at extreme temperatures causes thermal shock to the cylinder head, risking warpage and gasket failure. Step 3: Open the engine hood to maximize airflow. Step 4: High engine block temperatures coupled with rising vibration often precede a bearing seizure. Step 5: After 10 minutes of idling, if temperature hasn't dropped below 100°C, shut down engine. Step 6: Inspect coolant lines for burst hoses, fan belt for breakage, and water pump for impeller play. Step 7: Allow to cool for 30 minutes minimum before any mechanical inspection. Step 8: Pressure-test the cooling system before returning to service.",
+        "tools_required": "Coolant pressure tester, fan belt (spare), water pump (spare if available), gasket sealant (emergency)",
+        "estimated_downtime": "2–8 hours (depending on root cause)"
+    },
+    {
+        "title": "SOP-VIB-04a: Drivetrain Vibration — Warning",
+        "component": "vibration",
+        "severity": "warning",
+        "content_chunk": "Step 1: Vibration readings elevated above 2.5g but below 4.0g baseline. Step 2: Reduce speed to 30 km/h and note if vibration is speed-dependent (wheel/tyre) or load-dependent (drivetrain). Step 3: Check tyre pressures on all axles — uneven pressure is the #1 cause of false vibration alerts. Step 4: Inspect wheel nuts for looseness — hand-check with torque wrench at 600 Nm. Step 5: Check propeller shaft universal joints for play. Step 6: If vibration persists after tyre/wheel check, schedule wheel hub bearing inspection within 48 hours.",
+        "tools_required": "Torque wrench (600 Nm), tyre pressure gauge, rubber mallet (for bearing check)",
+        "estimated_downtime": "30 minutes (tyre/wheel check)"
+    },
+    {
+        "title": "SOP-VIB-04b: Wheel Hub & Bearing Failure — Critical",
+        "component": "vibration",
+        "severity": "critical",
+        "content_chunk": "IMMEDIATE ACTION REQUIRED. Step 1: STOP the vehicle immediately in a safe location. Step 2: Sustained high-frequency vibration above 4.0g at the axles strongly correlates with wheel hub bearing failure. Step 3: Continued operation WILL result in catastrophic axle lockup or wheel separation — this is a life-safety risk. Step 4: Engage parking brake and place wheel chocks. Step 5: Jack the affected axle and check for lateral play in the wheel assembly by gripping top and bottom of the tyre and rocking. Step 6: Any perceptible play confirms bearing failure. Step 7: Do NOT drive — arrange flatbed tow to maintenance bay. Step 8: Replace hub bearings, seals, and inspect the spindle for heat damage/scoring.",
+        "tools_required": "Wheel chocks, hydraulic jack, bearing puller, hub bearings (OEM Part #TK-BRG-4825), axle stands",
+        "estimated_downtime": "4–6 hours"
+    },
+    {
+        "title": "SOP-OIL-05a: Oil Pressure Anomaly — Warning",
+        "component": "oil_pressure",
+        "severity": "warning",
+        "content_chunk": "Step 1: Oil pressure reading dropping to 2.5–3.0 bar at idle (normal is 3.5+ bar at idle). Step 2: Check engine oil level on the dipstick — top up with 15W-40 CI-4 grade if below MIN. Step 3: Inspect oil filter condition — a clogged filter restricts flow. Step 4: Check for visible oil leaks around the sump gasket, turbo oil feed lines, and oil cooler. Step 5: If oil level is correct and no leaks visible, the oil pressure relief valve may be sticking — schedule removal and cleaning. Step 6: Monitor pressure continuously — if it drops below 2.0 bar, execute SOP-OIL-05b immediately.",
+        "tools_required": "Engine oil (15W-40 CI-4), oil filter (spare), funnel, drip tray, filter wrench",
+        "estimated_downtime": "30 minutes (top-up & inspection)"
+    },
+    {
+        "title": "SOP-OIL-05b: Oil Pressure Loss — Critical Emergency",
+        "component": "oil_pressure",
+        "severity": "critical",
+        "content_chunk": "LIFE-OF-ENGINE EMERGENCY. Step 1: SHUT DOWN ENGINE IMMEDIATELY — do NOT idle, do NOT wait. Every second of operation without oil pressure causes irreversible damage. Step 2: A sudden drop below 1.5 bar or high volatility in oil pressure indicates oil pump failure, severe leakage, or oil dilution from coolant breach. Step 3: Running the engine without adequate oil pressure will destroy piston rings, main bearings, and crankshaft journals within 60–90 seconds. Step 4: Do NOT attempt to restart the engine. Step 5: Check underneath the vehicle for active oil stream/pooling. Step 6: Tow the vehicle to the maintenance bay — do NOT use any method that turns the wheels through the drivetrain. Step 7: Full engine teardown inspection required: oil pump, bearings, cam followers, turbo bearings.",
+        "tools_required": "Tow truck (flatbed only), engine oil for post-repair fill, complete gasket set",
+        "estimated_downtime": "8–48 hours (engine rebuild if damaged)"
+    },
+    {
+        "title": "SOP-BAT-06a: Battery & Charging System — Warning",
+        "component": "battery_voltage",
+        "severity": "warning",
+        "content_chunk": "Step 1: Battery voltage reading between 23.0V and 24.5V while engine running (normal range: 25.5–27.5V on a 24V system). Step 2: This suggests alternator under-charging — check alternator belt tension (deflection should be 10–15mm). Step 3: Inspect battery terminals for corrosion — clean with wire brush and apply dielectric grease. Step 4: Test both batteries individually with a multimeter — a single weak cell drags down the whole system. Step 5: Check for parasitic drains — any aftermarket accessory (phone chargers, spotlights) wired incorrectly. Step 6: Schedule alternator load test within 24 hours.",
+        "tools_required": "Multimeter, wire brush, dielectric grease, belt tension gauge",
+        "estimated_downtime": "20 minutes (terminal cleaning)"
+    },
+    {
+        "title": "SOP-BAT-06b: Alternator & Voltage Regulator Failure — Critical",
+        "component": "battery_voltage",
+        "severity": "critical",
+        "content_chunk": "IMMEDIATE ACTION REQUIRED. Step 1: If voltage drops below 22.0V while running — the alternator or voltage regulator has failed. The ECU and fuel injection system require minimum 22V to operate correctly. Step 2: Reduce all non-essential electrical loads immediately: AC off, lights to minimum, radio off. Step 3: If voltage exceeds 29.0V — the voltage regulator is shorted and is overcharging. This risks ECU damage, battery explosion, and wiring harness fire. SHUT DOWN ENGINE for overcharging condition. Step 4: For under-voltage: drive directly to the nearest depot. Do NOT turn off the engine — you may not be able to restart. Step 5: For over-voltage: shut down, disconnect batteries, and tow. Step 6: Replace alternator, voltage regulator, and test all ECU modules after over-voltage event.",
+        "tools_required": "Multimeter, alternator unit (OEM), voltage regulator, battery disconnect tool",
+        "estimated_downtime": "2–4 hours"
+    },
+    {
+        "title": "SOP-CASCADE-07: Temperature + Oil Co-Degradation Cascade",
+        "component": "temperature",
+        "severity": "critical",
+        "content_chunk": "COMPOUND FAILURE PATTERN. Step 1: When engine temperature rises above 105°C AND oil pressure simultaneously drops below 2.5 bar, this indicates the most dangerous co-degradation cascade. Step 2: High temperature thins the oil (reduces viscosity), which causes oil pressure to drop. Lower oil pressure means less cooling to bearings, which generates more friction heat — a positive feedback loop. Step 3: IDLE ENGINE IMMEDIATELY. Step 4: If oil pressure does not recover above 3.0 bar within 60 seconds of idling, execute SOP-OIL-05b (full shutdown). Step 5: Do NOT shut down a hot engine unless oil pressure is critical — thermal shock to the cylinder head is the lesser risk only when oil pressure is maintained. Step 6: This pattern frequently precedes a main bearing seizure or turbocharger failure within 15–30 minutes of first detection.",
+        "tools_required": "All tools from SOP-TMP-03b and SOP-OIL-05b combined",
+        "estimated_downtime": "8–24 hours (compound repair)"
+    },
+    {
+        "title": "SOP-CASCADE-08: Suspension + Vibration Mechanical Wear",
+        "component": "vibration",
+        "severity": "critical",
+        "content_chunk": "COMPOUND FAILURE PATTERN. Step 1: Simultaneous suspension pressure drop AND rising vibration indicates mechanical wear propagation from the suspension into the drivetrain. Step 2: A failing suspension allows excessive axle movement, which accelerates wheel bearing and U-joint wear. Step 3: REDUCE SPEED to below 15 km/h immediately. Step 4: Check if the vehicle lists to one side — confirms unilateral suspension failure. Step 5: Inspect the failed side's air bag, shock absorber mounting bolts, and leaf spring center bolt. Step 6: With the vehicle stopped, check wheel bearings on the affected axle (see SOP-VIB-04b). Step 7: Both the suspension unit AND wheel bearings should be replaced together to prevent recurrence.",
+        "tools_required": "All tools from SOP-SUS-02b and SOP-VIB-04b combined",
+        "estimated_downtime": "6–8 hours"
+    },
+    {
+        "title": "SOP-PREV-09: 250-Hour Preventive Maintenance Checklist",
+        "component": "temperature",
+        "severity": "preventive",
+        "content_chunk": "SCHEDULED MAINTENANCE — every 250 operating hours or 2 weeks, whichever comes first. Step 1: Engine oil and filter change (15W-40 CI-4, filter OEM #TK-FLT-001). Step 2: Check and top up coolant level — test concentration with refractometer (50/50 mix). Step 3: Inspect all drive belts for cracking, glazing, or fraying. Step 4: Grease all chassis lubrication points (14 points, NLGI Grade 2 grease). Step 5: Check air filter restriction indicator — replace if in red zone. Step 6: Inspect brake pad thickness on all axles — minimum 4mm remaining. Step 7: Test all lights, indicators, and reverse alarm. Step 8: Record all readings in the vehicle maintenance logbook.",
+        "tools_required": "Engine oil (15L, 15W-40), oil filter, grease gun, NLGI-2 grease, refractometer, brake gauge",
+        "estimated_downtime": "2 hours (scheduled)"
+    },
+    {
+        "title": "SOP-PREV-10: 1000-Hour Major Service Protocol",
+        "component": "hydraulic_pressure",
+        "severity": "preventive",
+        "content_chunk": "MAJOR SERVICE — every 1000 operating hours or quarterly. Step 1: Complete all 250-hour checks (SOP-PREV-09). Step 2: Drain and replace hydraulic fluid (ISO VG 46, full system flush). Step 3: Replace hydraulic return filter and suction strainer. Step 4: Inspect hydraulic ram seals under pressure — apply 300 bar test load and hold for 5 minutes, checking for drift. Step 5: Replace fuel filter and water separator element. Step 6: Inspect turbocharger for shaft play (max 0.05mm axial, 0.08mm radial). Step 7: Test alternator output under load (minimum 28A at 2000 RPM). Step 8: Check suspension air bag pressures match within 0.3 bar across all axles. Step 9: Torque all wheel nuts to specification (600 Nm). Step 10: Road test and verify all sensor readings return to baseline.",
+        "tools_required": "Hydraulic fluid (40L, ISO VG 46), filter kit, fuel filter, torque wrench, dial indicator (for turbo check)",
+        "estimated_downtime": "6–8 hours (scheduled)"
+    },
+    {
+        "title": "SOP-PREV-11: Daily Pre-Trip Inspection",
+        "component": "oil_pressure",
+        "severity": "preventive",
+        "content_chunk": "DAILY CHECK — before every shift start. Step 1: Walk-around inspection — check for fresh fluid leaks under the vehicle (oil = dark brown, coolant = green/pink, hydraulic = amber). Step 2: Check engine oil level on dipstick — between MIN and MAX marks. Step 3: Verify coolant level in expansion tank is at COLD mark. Step 4: Check tyre condition and pressures visually (no obvious deflation or damage). Step 5: Start engine — observe oil pressure gauge reads 3.5+ bar within 10 seconds. Step 6: Check battery voltage reads 25+ volts with engine running. Step 7: Test service brake and parking brake operation. Step 8: Verify all mirrors clean and correctly positioned. Step 9: Test horn and reverse alarm. Step 10: Log start-of-shift readings in the EdgeGuard AI system.",
+        "tools_required": "No tools required — visual inspection only",
+        "estimated_downtime": "10 minutes"
+    },
+    {
+        "title": "SOP-HYD-12: Hydraulic Hose Burst Emergency",
+        "component": "hydraulic_pressure",
+        "severity": "critical",
+        "content_chunk": "EMERGENCY — SAFETY HAZARD. Step 1: A sudden drop to 0 bar hydraulic pressure with visible fluid spray indicates a high-pressure hose burst. Step 2: KEEP ALL PERSONNEL CLEAR — hydraulic fluid at 400+ bar can penetrate skin and cause injection injuries requiring immediate surgical treatment. Step 3: Shut down the PTO immediately. Step 4: Do NOT attempt to touch or contain the spray. Step 5: Turn off the engine to stop the hydraulic pump. Step 6: Place absorbent pads around the spill — hydraulic fluid is an environmental contaminant. Step 7: The bed may drop uncontrolled if the burst is on the lift circuit — establish an exclusion zone around the vehicle. Step 8: Only qualified hydraulic technicians should replace burst hoses. Full system flush required after hose replacement.",
+        "tools_required": "Absorbent pads, replacement hose assembly (OEM), hydraulic fluid for refill, safety barriers",
+        "estimated_downtime": "4–6 hours (emergency repair)"
+    },
+    {
+        "title": "SOP-VIB-13: Propeller Shaft Imbalance",
+        "component": "vibration",
+        "severity": "warning",
+        "content_chunk": "Step 1: Speed-dependent vibration that worsens between 40–60 km/h and reduces above 80 km/h suggests propeller shaft imbalance or a failing universal joint. Step 2: This vibration pattern is distinct from wheel bearing vibration (which worsens continuously with speed). Step 3: Safely reduce speed to below 30 km/h where the vibration is minimal. Step 4: With the vehicle stopped and engine off, crawl under and visually check all U-joints by gripping the shaft and checking for play. Step 5: Inspect the center bearing support mount for rubber deterioration. Step 6: Check for missing balance weights on the propeller shaft. Step 7: If any U-joint shows play, do NOT continue driving at highway speeds — arrange low-speed transit to workshop. Step 8: Replace U-joints in pairs (front and rear of the affected section).",
+        "tools_required": "U-joint kit, bearing puller, grease gun, safety stands",
+        "estimated_downtime": "3–4 hours"
+    },
+    {
+        "title": "SOP-BAT-14: ECU Brown-Out Recovery",
+        "component": "battery_voltage",
+        "severity": "critical",
+        "content_chunk": "ELECTRONIC SYSTEM FAILURE. Step 1: If battery voltage drops below 20V while the engine is running, the Engine Control Unit (ECU) enters brown-out mode — erratic fuel injection, misfires, and potentially a complete engine stall. Step 2: If the engine stalls due to voltage drop, do NOT attempt immediate restart — wait 30 seconds for ECU capacitors to discharge fully. Step 3: Attempt restart — if unsuccessful after 3 attempts, the ECU may have locked into a fault state. Step 4: Disconnect both batteries for 60 seconds to perform a full ECU reset. Step 5: Reconnect and attempt restart. Step 6: If running, drive directly to depot at reduced speed with minimal electrical loads. Step 7: All diagnostic trouble codes (DTCs) must be cleared with a diagnostic scanner after battery reconnection. Step 8: Root cause (alternator, wiring, battery cell failure) must be identified and fixed before return to service.",
+        "tools_required": "Battery disconnect tools, OBD diagnostic scanner, jump leads, replacement batteries (if required)",
+        "estimated_downtime": "1–4 hours"
+    }
+]

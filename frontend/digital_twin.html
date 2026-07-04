@@ -1,0 +1,1893 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>EdgeGuard AI — Digital Twin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root {
+  --bg: #0f172a;
+  --bg2: #0b1224;
+  --card: #1e293b;
+  --card2: #243245;
+  --line: #334155;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #3b82f6;
+  --accent2: #60a5fa;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --critical-glow: rgba(239, 68, 68, 0.55);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --radius: 12px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(ellipse at top, #11203d 0%, var(--bg) 55%, #07101f 100%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  padding: 16px;
+  gap: 14px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--card) 0%, #182236 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 22px;
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: conic-gradient(from 180deg, #1d4ed8, #3b82f6, #06b6d4, #1d4ed8);
+  position: relative;
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
+  flex: 0 0 auto;
+}
+.logo-mark::after {
+  content: "EG";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.brand-text .sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.4px;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 13px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+.kpi .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi .val { font-weight: 700; font-family: var(--mono); font-size: 15px; }
+
+.health-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.health-pill.amber { background: rgba(245,158,11,.12); color: var(--amber); border-color: rgba(245,158,11,.35); }
+.health-pill.red   { background: rgba(239,68,68,.12);  color: var(--red);   border-color: rgba(239,68,68,.4); }
+
+.conn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 0 rgba(239,68,68,0.7);
+  animation: pulse-red 1.4s infinite;
+}
+.dot.green {
+  background: var(--green);
+  box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
+  animation: pulse-green 1.6s infinite;
+}
+@keyframes pulse-red  {
+  0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.55); }
+  70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
+  70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+.demo-badge {
+  display: none;
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  color: white;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  margin-left: 6px;
+}
+.demo-badge.show { display: inline-block; }
+
+/* ===== MAIN GRID ===== */
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(360px, 1fr);
+  gap: 14px;
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .main { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel h2 .small {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.2px;
+  color: var(--muted);
+}
+
+/* ===== TRUCK SCHEMATIC ===== */
+.twin-wrap {
+  position: relative;
+  min-height: 460px;
+  background:
+    radial-gradient(800px 220px at 50% 105%, rgba(59,130,246,0.10), transparent 60%),
+    linear-gradient(180deg, #0d1a33 0%, #0a1326 100%);
+  border: 1px solid #1c2a44;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.twin-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+.twin-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 30px; height: 90px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 100%);
+  pointer-events: none;
+}
+.twin-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.critical-banner {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  background: linear-gradient(90deg, #ef4444, #b91c1c);
+  color: white;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 8px 22px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 30px rgba(239,68,68,0.6);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 5;
+  pointer-events: none;
+}
+.critical-banner.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  animation: banner-flash 1.2s infinite;
+}
+@keyframes banner-flash {
+  0%, 100% { box-shadow: 0 0 25px rgba(239,68,68,0.55); }
+  50% { box-shadow: 0 0 45px rgba(239,68,68,0.95); }
+}
+
+/* Truck node glow */
+.node {
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+.node:hover { transform: scale(1.18); }
+.node-halo { transition: opacity 0.6s ease, r 0.6s ease; }
+.node-core { transition: fill 0.6s ease, stroke 0.6s ease; }
+
+.node.critical .node-halo {
+  animation: halo-pulse 1.1s ease-in-out infinite;
+}
+@keyframes halo-pulse {
+  0%, 100% { opacity: 0.4; r: 14; }
+  50%      { opacity: 0.9; r: 22; }
+}
+
+.node.critical .node-core {
+  animation: core-pulse 1.1s ease-in-out infinite;
+}
+@keyframes core-pulse {
+  0%, 100% { filter: drop-shadow(0 0 4px var(--red)); }
+  50%      { filter: drop-shadow(0 0 14px var(--red)); }
+}
+
+.cascade-line {
+  stroke-dasharray: 6 6;
+  stroke-dashoffset: 0;
+  transition: stroke 0.6s ease, stroke-width 0.6s ease, opacity 0.6s ease;
+}
+.cascade-line.active {
+  animation: dash-march 1.6s linear infinite;
+}
+@keyframes dash-march {
+  to { stroke-dashoffset: -48; }
+}
+
+.chassis-path {
+  transition: stroke 0.6s ease, filter 0.6s ease, opacity 0.6s ease;
+}
+
+.stress-overlay {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+/* Exhaust / dust particles */
+.particle-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.particle {
+  position: absolute;
+  width: 6px; height: 6px;
+  background: radial-gradient(circle, rgba(120,120,120,0.95), rgba(120,120,120,0) 70%);
+  border-radius: 50%;
+  opacity: 0;
+}
+.particle.active {
+  animation: dust-rise 2.4s linear infinite;
+}
+@keyframes dust-rise {
+  0%   { opacity: 0; transform: translate(0,0) scale(0.4); }
+  20%  { opacity: 0.85; }
+  100% { opacity: 0; transform: translate(40px,-90px) scale(1.6); }
+}
+
+/* Truck tipper bed raise */
+.tipper-bed {
+  transition: transform 0.8s cubic-bezier(.2,.8,.2,1), transform-origin 0.4s ease;
+  transform-box: fill-box;
+  transform-origin: 80% 100%;
+}
+.tipper-bed.raised {
+  transform: rotate(-18deg) translate(8px,-10px);
+}
+
+/* ===== LIVE SENSOR PANEL ===== */
+.sensors {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.sensor-card {
+  background: var(--card2);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  transition: border-color 0.6s ease, box-shadow 0.6s ease, transform 0.2s ease;
+  cursor: pointer;
+  min-width: 0;
+}
+.sensor-card:hover { transform: translateY(-2px); }
+.sensor-card.healthy { border-color: var(--green); box-shadow: 0 0 0 2px rgba(34,197,94,0.10) inset; }
+.sensor-card.warning { border-color: var(--amber); box-shadow: 0 0 0 2px rgba(245,158,11,0.12) inset; }
+.sensor-card.critical { border-color: var(--red); box-shadow: 0 0 0 2px rgba(239,68,68,0.18) inset, 0 0 18px rgba(239,68,68,0.25); }
+
+.sensor-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.sensor-name {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.health-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(34,197,94,0.15);
+  color: var(--green);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.health-badge.amber { background: rgba(245,158,11,0.15); color: var(--amber); }
+.health-badge.red   { background: rgba(239,68,68,0.18);  color: var(--red); }
+
+.sensor-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.sensor-value .v { font-size: 20px; font-weight: 700; font-family: var(--mono); letter-spacing: 0.3px; }
+.sensor-value .u { font-size: 11px; color: var(--muted); }
+
+.sensor-trend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.trend-arrow {
+  font-size: 14px;
+  line-height: 1;
+  width: 18px; height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  color: var(--muted);
+}
+.trend-arrow.up   { color: var(--amber); background: rgba(245,158,11,0.12); }
+.trend-arrow.down { color: #60a5fa;  background: rgba(59,130,246,0.12); }
+.trend-arrow.flat { color: var(--muted); }
+
+.spark {
+  width: 100%;
+  height: 28px;
+  display: block;
+}
+
+/* ===== PREDICTION PANEL ===== */
+.pred-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.gauge {
+  position: relative;
+  width: 130px; height: 130px;
+}
+.gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gauge .gauge-track { stroke: #243245; }
+.gauge .gauge-fill {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease, stroke 0.6s ease;
+}
+.gauge .gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.gauge .gauge-center .pct {
+  font-size: 26px;
+  font-weight: 800;
+  font-family: var(--mono);
+  line-height: 1;
+  transition: color 0.6s ease;
+}
+.gauge .gauge-center .lbl {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.rul-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.rul-value {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.rul-value .small { font-size: 11px; color: var(--muted); margin-left: 4px; }
+.rul-bar {
+  height: 8px;
+  background: #1b2740;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #2a3a58;
+}
+.rul-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), #84cc16, var(--amber), var(--red));
+  background-size: 220% 100%;
+  background-position: 0% 0%;
+  transition: width 0.8s ease, background-position 0.8s ease;
+}
+
+.alerts {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.alerts::-webkit-scrollbar { width: 6px; }
+.alerts::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; }
+
+.alert {
+  background: var(--card2);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: start;
+  font-size: 12px;
+  transition: border-color 0.4s ease;
+}
+.alert.warning { border-left-color: var(--amber); }
+.alert.critical { border-left-color: var(--red); }
+.alert .badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(59,130,246,0.15);
+  color: var(--accent2);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.alert.warning .badge { background: rgba(245,158,11,0.15); color: var(--amber); }
+.alert.critical .badge { background: rgba(239,68,68,0.18); color: var(--red); }
+.alert .body { line-height: 1.4; }
+.alert .body .comp { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+.alert .body .msg { margin-top: 2px; color: var(--text); }
+.alert .ts { font-size: 10px; color: var(--muted); font-family: var(--mono); }
+
+.empty-state {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 14px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+
+.copilot {
+  margin-top: 12px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(124,58,237,0.10));
+  border: 1px solid rgba(59,130,246,0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #cbd5e1;
+}
+.copilot .head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent2);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.copilot .head::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 8px var(--accent2);
+}
+
+/* ===== TIMELINE REPLAY ===== */
+.timeline {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+}
+.timeline .play {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card2);
+  color: var(--text);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+.timeline .play:hover { background: #2c3a52; }
+.timeline .scrub {
+  flex: 1;
+  position: relative;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.timeline .scrub input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green) 0%, var(--amber) 60%, var(--red) 100%);
+  border-radius: 999px;
+  outline: none;
+}
+.timeline .scrub input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(59,130,246,0.6);
+}
+.timeline .scrub input::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--accent);
+  cursor: pointer;
+}
+.timeline .ts {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  min-width: 90px;
+  text-align: right;
+}
+.timeline .lbl {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+/* ===== SIDE PANEL (drawer) ===== */
+.drawer-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 50;
+}
+.drawer-mask.show { opacity: 1; pointer-events: auto; }
+
+.drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(440px, 95vw);
+  background: linear-gradient(180deg, #0e1a30 0%, #0a1322 100%);
+  border-left: 1px solid var(--line);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+}
+.drawer.show { transform: translateX(0); }
+.drawer-head {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.drawer-head h3 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+.drawer-head h3 .sub {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.drawer-close {
+  background: var(--card2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.drawer-close:hover { background: #2c3a52; }
+.drawer-body {
+  padding: 16px 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+.drawer-body h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin: 14px 0 8px;
+}
+.drawer-body h4:first-child { margin-top: 0; }
+.history-chart {
+  width: 100%;
+  height: 180px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: block;
+}
+.sop-text {
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #cbd5e1;
+}
+.sop-text strong { color: var(--text); }
+
+.threshold-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+.threshold-legend .cell {
+  font-size: 10px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  text-align: center;
+  font-family: var(--mono);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+.threshold-legend .cell.healthy { color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.threshold-legend .cell.warning { color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.threshold-legend .cell.critical{ color: var(--red);   border: 1px solid rgba(239,68,68,0.3); }
+
+.live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.live-tag::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse-green 1.4s infinite;
+}
+
+/* Sensor node label */
+.node-label {
+  fill: #e2e8f0;
+  font-size: 10px;
+  font-family: var(--mono);
+  text-anchor: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #0a1322;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* Status grid in header */
+.header-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--mono);
+}
+.header-clock .lbl { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+.header-clock .val { font-size: 14px; font-weight: 700; }
+
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">
+        <h1>EdgeGuard AI <span class="demo-badge" id="demoBadge">DEMO MODE</span></h1>
+        <p class="sub">TRUCK1 — Tata Signa 4825.TK &middot; Predictive Maintenance</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="kpi">
+        <span class="lbl">Fleet Health</span>
+        <span class="health-pill" id="healthPill">100%</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Uptime</span>
+        <span class="val" id="uptimeVal">00:00:00</span>
+      </div>
+      <div class="header-clock">
+        <span class="lbl">Live Clock</span>
+        <span class="val" id="liveClock">--:--:--</span>
+      </div>
+      <div class="conn">
+        <span class="dot green" id="connDot"></span>
+        <span id="connTxt">MQTT Live</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN ==================== -->
+  <main class="main">
+
+    <!-- ===== Truck Schematic Panel ===== -->
+    <section class="panel" id="twinPanel">
+      <h2>Digital Twin <span class="small">Side view &middot; live sensor overlay &middot; click a node</span></h2>
+      <div class="twin-wrap" id="twinWrap">
+        <div class="critical-banner" id="critBanner">⚠ CRITICAL FAILURE IMMINENT ⚠</div>
+
+        <!-- Particle layer (exhaust) -->
+        <div class="particle-layer" id="particleLayer"></div>
+
+        <svg class="twin-svg" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet">
+
+          <defs>
+            <linearGradient id="bedGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#5b6b85"/>
+              <stop offset="1" stop-color="#2f3a52"/>
+            </linearGradient>
+            <linearGradient id="cabGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3b82f6"/>
+              <stop offset="1" stop-color="#1e40af"/>
+            </linearGradient>
+            <linearGradient id="chassisGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#475569"/>
+              <stop offset="1" stop-color="#1e293b"/>
+            </linearGradient>
+            <radialGradient id="wheelGrad" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#1f2937"/>
+              <stop offset="0.6" stop-color="#0f172a"/>
+              <stop offset="1" stop-color="#000"/>
+            </radialGradient>
+            <linearGradient id="ramGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#94a3b8"/>
+              <stop offset="0.5" stop-color="#e2e8f0"/>
+              <stop offset="1" stop-color="#94a3b8"/>
+            </linearGradient>
+            <filter id="chassisShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+              <feOffset dx="0" dy="3"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <symbol id="wheel" viewBox="-50 -50 100 100">
+              <circle r="48" fill="url(#wheelGrad)" stroke="#334155" stroke-width="2"/>
+              <circle r="32" fill="none" stroke="#475569" stroke-width="2"/>
+              <circle r="14" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+              <g stroke="#64748b" stroke-width="2.5" stroke-linecap="round">
+                <line x1="0" y1="-32" x2="0" y2="32"/>
+                <line x1="-32" y1="0" x2="32" y2="0"/>
+                <line x1="-22" y1="-22" x2="22" y2="22"/>
+                <line x1="-22" y1="22" x2="22" y2="-22"/>
+              </g>
+              <circle r="5" fill="#cbd5e1"/>
+            </symbol>
+          </defs>
+
+          <!-- ============== TRUCK BODY ============== -->
+          <g id="truckBody">
+
+            <!-- Tipper bed (raised at critical) -->
+            <g class="tipper-bed" id="tipperBed">
+              <!-- Bed main body -->
+              <path d="M 470 220 L 830 220 L 850 260 L 830 300 L 470 300 Z"
+                    fill="url(#bedGrad)" stroke="#0f172a" stroke-width="2" class="chassis-path"/>
+              <!-- Bed top rim -->
+              <path d="M 470 220 L 830 220 L 850 220 L 850 218 L 470 218 Z"
+                    fill="#94a3b8" opacity="0.7"/>
+              <!-- Bed ribs -->
+              <g stroke="#1e293b" stroke-width="1.5" opacity="0.6">
+                <line x1="540" y1="220" x2="540" y2="300"/>
+                <line x1="610" y1="220" x2="610" y2="300"/>
+                <line x1="680" y1="220" x2="680" y2="300"/>
+                <line x1="750" y1="220" x2="750" y2="300"/>
+              </g>
+              <!-- Tail gate -->
+              <path d="M 830 220 L 850 260 L 850 300 L 820 300 Z"
+                    fill="#3b475e" stroke="#0f172a" stroke-width="1.5"/>
+            </g>
+
+            <!-- Hydraulic ram under tipper bed -->
+            <g id="hydraulicRam">
+              <line x1="490" y1="305" x2="640" y2="345" stroke="#64748b" stroke-width="3"/>
+              <rect x="610" y="320" width="120" height="20" rx="3" fill="url(#ramGrad)" stroke="#475569" stroke-width="1.5"/>
+              <line x1="610" y1="320" x2="610" y2="340" stroke="#475569" stroke-width="1"/>
+              <line x1="730" y1="320" x2="730" y2="340" stroke="#475569" stroke-width="1"/>
+              <circle cx="610" cy="330" r="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1"/>
+              <circle cx="730" cy="330" r="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1"/>
+            </g>
+
+            <!-- Main chassis frame -->
+            <rect x="120" y="280" width="710" height="30" rx="4" fill="url(#chassisGrad)" class="chassis-path" filter="url(#chassisShadow)"/>
+
+            <!-- Cross members -->
+            <g fill="#334155">
+              <rect x="220" y="305" width="8" height="20"/>
+              <rect x="380" y="305" width="8" height="20"/>
+              <rect x="540" y="305" width="8" height="20"/>
+              <rect x="720" y="305" width="8" height="20"/>
+            </g>
+
+            <!-- Cab (boxy) -->
+            <g id="cabGroup">
+              <!-- Cab body -->
+              <path d="M 110 160 L 290 160 L 305 200 L 305 285 L 110 285 Z"
+                    fill="url(#cabGrad)" stroke="#0f172a" stroke-width="2" class="chassis-path"/>
+              <!-- Roof highlight -->
+              <path d="M 110 160 L 290 160 L 285 168 L 115 168 Z" fill="#60a5fa" opacity="0.5"/>
+              <!-- Windshield -->
+              <path d="M 130 178 L 195 178 L 200 210 L 130 210 Z" fill="#0ea5e9" opacity="0.85" stroke="#1e3a8a" stroke-width="1.5"/>
+              <line x1="162" y1="178" x2="167" y2="210" stroke="#1e3a8a" stroke-width="1"/>
+              <!-- Side window -->
+              <rect x="220" y="178" width="60" height="32" fill="#0ea5e9" opacity="0.7" stroke="#1e3a8a" stroke-width="1.5"/>
+              <!-- Door handle -->
+              <line x1="270" y1="240" x2="285" y2="240" stroke="#cbd5e1" stroke-width="2"/>
+              <!-- Door line -->
+              <line x1="210" y1="220" x2="210" y2="285" stroke="#1e3a8a" stroke-width="1.5"/>
+              <!-- Headlight -->
+              <ellipse cx="118" cy="240" rx="6" ry="8" fill="#fde047" stroke="#facc15" stroke-width="1"/>
+              <!-- Front bumper -->
+              <rect x="105" y="260" width="20" height="22" fill="#475569" stroke="#0f172a" stroke-width="1.5"/>
+              <!-- Step -->
+              <rect x="115" y="285" width="50" height="6" fill="#334155"/>
+            </g>
+
+            <!-- Exhaust pipe (with particles on critical) -->
+            <g id="exhaustGroup">
+              <line x1="305" y1="180" x2="305" y2="100" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+              <line x1="305" y1="180" x2="305" y2="100" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+              <ellipse cx="305" cy="100" rx="10" ry="3" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+            </g>
+
+            <!-- Suspension hints (rear) -->
+            <g stroke="#64748b" stroke-width="2" fill="none">
+              <path d="M 720 310 L 720 335 L 760 350"/>
+              <path d="M 580 310 L 580 335 L 540 350"/>
+            </g>
+            <g stroke="#94a3b8" stroke-width="1.5">
+              <line x1="580" y1="335" x2="540" y2="350"/>
+              <line x1="720" y1="335" x2="760" y2="350"/>
+            </g>
+
+            <!-- Front suspension (hint) -->
+            <g stroke="#64748b" stroke-width="2" fill="none">
+              <path d="M 200 310 L 200 335 L 220 350"/>
+            </g>
+
+            <!-- Battery (cab underside) -->
+            <rect x="170" y="275" width="40" height="20" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+            <rect x="174" y="278" width="32" height="4" fill="#475569"/>
+            <text x="190" y="291" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">12V</text>
+
+            <!-- Wheels: front + 2 rear -->
+            <use href="#wheel" x="200" y="350" width="100" height="100"/>
+            <use href="#wheel" x="560" y="350" width="100" height="100"/>
+            <use href="#wheel" x="740" y="350" width="100" height="100"/>
+
+            <!-- Ground shadow -->
+            <ellipse cx="450" cy="425" rx="420" ry="8" fill="rgba(0,0,0,0.45)"/>
+
+            <!-- Stress overlay (visible at high failure probability) -->
+            <g class="stress-overlay" id="stressOverlay">
+              <path d="M 200 285 L 280 285" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.7"/>
+              <path d="M 470 285 L 600 285" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.7"/>
+              <path d="M 720 285 L 830 285" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.7"/>
+              <path d="M 130 220 L 130 270" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.5"/>
+              <circle cx="200" cy="350" r="55" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+              <circle cx="560" cy="350" r="55" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+              <circle cx="740" cy="350" r="55" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+              <text x="450" y="445" text-anchor="middle" font-family="monospace" font-size="11" fill="#ef4444" font-weight="700" letter-spacing="1.5">STRUCTURAL STRESS DETECTED</text>
+            </g>
+
+          </g>
+
+          <!-- ============== CASCADE LINES ============== -->
+          <g id="cascadeGroup" fill="none" stroke-width="2.5" stroke-linecap="round">
+            <line class="cascade-line" id="line_engine_bearing" x1="180" y1="220" x2="200" y2="350"/>
+            <line class="cascade-line" id="line_bearing_oil"   x1="200" y1="350" x2="240" y2="260"/>
+            <line class="cascade-line" id="line_oil_hydraulic" x1="240" y1="260" x2="660" y2="320"/>
+          </g>
+
+          <!-- ============== SENSOR NODES ============== -->
+          <g id="nodesGroup">
+
+            <!-- Engine (cab area) -->
+            <g class="node" id="node_temperature" data-sensor="temperature">
+              <circle class="node-halo" cx="200" cy="220" r="14" fill="#22c55e" opacity="0.4"/>
+              <circle class="node-core" cx="200" cy="220" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+              <text class="node-label" x="200" y="200">ENGINE</text>
+            </g>
+
+            <!-- Axle bearing (front wheel hub) -->
+            <g class="node" id="node_vibration" data-sensor="vibration">
+              <circle class="node-halo" cx="200" cy="370" r="14" fill="#22c55e" opacity="0.4"/>
+              <circle class="node-core" cx="200" cy="370" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+              <text class="node-label" x="200" y="395">BEARING</text>
+            </g>
+
+            <!-- Oil system (engine bay) -->
+            <g class="node" id="node_oil_pressure" data-sensor="oil_pressure">
+              <circle class="node-halo" cx="240" cy="260" r="14" fill="#22c55e" opacity="0.4"/>
+              <circle class="node-core" cx="240" cy="260" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+              <text class="node-label" x="240" y="282">OIL</text>
+            </g>
+
+            <!-- Hydraulic ram (tipper bed hinge) -->
+            <g class="node" id="node_hydraulic_pressure" data-sensor="hydraulic_pressure">
+              <circle class="node-halo" cx="660" cy="330" r="14" fill="#22c55e" opacity="0.4"/>
+              <circle class="node-core" cx="660" cy="330" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+              <text class="node-label" x="660" y="352">HYD</text>
+            </g>
+
+            <!-- Suspension (rear axle) -->
+            <g class="node" id="node_suspension_pressure" data-sensor="suspension_pressure">
+              <circle class="node-halo" cx="560" cy="370" r="14" fill="#22c55e" opacity="0.4"/>
+              <circle class="node-core" cx="560" cy="370" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+              <text class="node-label" x="560" y="395">SUSP</text>
+            </g>
+
+            <!-- Battery (cab underside) -->
+            <g class="node" id="node_battery_voltage" data-sensor="battery_voltage">
+              <circle class="node-halo" cx="190" cy="290" r="11" fill="#22c55e" opacity="0.4"/>
+              <circle class="node-core" cx="190" cy="290" r="7" fill="#22c55e" stroke="#0f172a" stroke-width="1.5"/>
+              <text class="node-label" x="190" y="313">BATT</text>
+            </g>
+
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===== Right column ===== -->
+    <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 14px; min-height: 0;">
+
+      <!-- Live Sensors -->
+      <section class="panel">
+        <h2>Live Sensors <span class="live-tag">Polling 3s</span></h2>
+        <div class="sensors" id="sensorGrid"></div>
+      </section>
+
+      <!-- Predictions -->
+      <section class="panel">
+        <h2>ML Predictions <span class="small">Polling 5s</span></h2>
+        <div class="pred-grid">
+          <div class="gauge" id="gauge">
+            <svg viewBox="0 0 120 120">
+              <circle class="gauge-track" cx="60" cy="60" r="50" fill="none" stroke-width="10"/>
+              <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="50" fill="none"
+                      stroke="#22c55e" stroke-width="10"
+                      stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="pct" id="gaugePct">0%</div>
+              <div class="lbl">Failure</div>
+            </div>
+          </div>
+          <div class="rul-block">
+            <div class="rul-value"><span id="rulVal">—</span><span class="small">hours remaining</span></div>
+            <div class="rul-bar"><div class="fill" id="rulFill" style="width: 0%; background-position: 0% 0%;"></div></div>
+            <div class="small" style="color: var(--muted); font-size: 11px;" id="rulSub">Estimated RUL &middot; updates with prediction</div>
+          </div>
+        </div>
+
+        <div class="alerts" id="alertsList">
+          <div class="empty-state">No active alerts &middot; system nominal</div>
+        </div>
+
+        <div class="copilot" id="copilotBox">
+          <div class="head">EdgeGuard Copilot</div>
+          <div id="copilotText">All systems nominal. Truck TRUCK1 is operating within safe parameters. No action required.</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== TIMELINE REPLAY ==================== -->
+  <footer class="timeline">
+    <button class="play" id="playBtn" title="Play / Pause">▶</button>
+    <div class="lbl">Timeline Replay</div>
+    <div class="scrub">
+      <input type="range" min="0" max="100" value="100" id="scrub" />
+    </div>
+    <div class="ts" id="scrubTime">now</div>
+  </footer>
+</div>
+
+<!-- ==================== DRAWER ==================== -->
+<div class="drawer-mask" id="drawerMask"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h3 id="drawerTitle">Sensor<span class="sub" id="drawerSub">Click a node or card</span></h3>
+    <button class="drawer-close" id="drawerClose" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body">
+    <h4>Current Reading</h4>
+    <div class="sop-text" id="drawerCurrent">—</div>
+
+    <h4>History (last 20 readings)</h4>
+    <canvas class="history-chart" id="historyChart" width="800" height="360"></canvas>
+
+    <h4>Threshold Map</h4>
+    <div class="threshold-legend" id="thresholds"></div>
+
+    <h4>Recommended Action (SOP)</h4>
+    <div class="sop-text" id="sopText">—</div>
+  </div>
+</aside>
+
+<script>
+/* ============================================================
+   EDGEGUARD AI — DIGITAL TWIN DASHBOARD
+   Polls backend (FastAPI) at :8000. Falls back to demo mode.
+   ============================================================ */
+
+const API = "http://localhost:8000";
+const SENSOR_KEYS = [
+  "temperature", "vibration", "oil_pressure",
+  "hydraulic_pressure", "suspension_pressure", "battery_voltage"
+];
+
+const SENSOR_META = {
+  temperature:          { name: "Engine Temp",    unit: "°C", pos: "Cab / engine bay" },
+  vibration:            { name: "Vibration",      unit: "g",  pos: "Front axle bearing" },
+  oil_pressure:         { name: "Oil Pressure",   unit: "bar",pos: "Engine lubrication" },
+  hydraulic_pressure:   { name: "Hydraulic",      unit: "bar",pos: "Tipper lift ram" },
+  suspension_pressure:  { name: "Suspension",     unit: "bar",pos: "Rear axle" },
+  battery_voltage:      { name: "Battery",        unit: "V",  pos: "Cab underside" }
+};
+
+const THRESHOLDS = {
+  temperature:         { healthy: [null, 75],  warning: [75, 90],    critical: [90, null] },
+  vibration:           { healthy: [null, 0.8], warning: [0.8, 1.5],  critical: [1.5, null] },
+  oil_pressure:        { healthy: [2.5, null], warning: [1.5, 2.5],  critical: [null, 1.5] },
+  hydraulic_pressure:  { healthy: [180, null], warning: [120, 180], critical: [null, 120] },
+  suspension_pressure: { healthy: [5.0, null], warning: [3.5, 5.0], critical: [null, 3.5] },
+  battery_voltage:     { healthy: [22, null],  warning: [21, 22],   critical: [null, 21] }
+};
+
+const SOP = {
+  temperature: "<strong>Engine Overheat</strong> — Reduce load immediately. Park in a safe, ventilated area. Check coolant level, radiator fan operation, and thermostat. Do not resume operation until temperature drops below 80°C and a full pressure test has been performed.",
+  vibration: "<strong>Axle Bearing Wear</strong> — Reduce speed below 40 km/h. Inspect wheel hub for play, check for hot spots with IR thermometer. Schedule wheel bearing repacking within next 8 hours of operation.",
+  oil_pressure: "<strong>Low Oil Pressure</strong> — STOP engine immediately to prevent seizure. Check oil level, oil filter, and pressure sender. Tow to nearest service bay. Do not restart until cause is identified and oil pressure > 2.5 bar at idle.",
+  hydraulic_pressure: "<strong>Hydraulic System Weak</strong> — Avoid tipper bed actuation. Inspect for external leaks at ram, hoses, and fittings. Check hydraulic fluid reservoir level. Maximum 2 tipper cycles permitted before mandatory service.",
+  suspension_pressure: "<strong>Suspension Pressure Loss</strong> — Reduce payload by 20%. Check air line connections, valve block, and bellows for leaks. Verify height sensor calibration. Schedule air-spring inspection within 24 hours.",
+  battery_voltage: "<strong>Low Battery</strong> — Switch off non-essential electrical loads. Verify alternator output (should be 27.6–28.8V running). Inspect battery terminals for corrosion. Charge or replace battery if voltage remains below 22V after 30 min of engine run."
+};
+
+const COLORS = {
+  healthy:  "#22c55e",
+  warning:  "#f59e0b",
+  critical: "#ef4444"
+};
+
+/* ============= STATE ============= */
+const state = {
+  demo: false,
+  history: {},                 // sensor -> [vals]
+  latest: {},                  // sensor -> {value, ts}
+  history_maxlen: 20,
+  prediction: { failure_probability: 0, rul_hours: null, severity: "healthy" },
+  alerts: [],
+  lastConnOk: false,
+  startTime: Date.now(),
+  healthScore: 100
+};
+
+SENSOR_KEYS.forEach(k => state.history[k] = []);
+
+/* ============= HEALTH ============= */
+function classify(sensor, v) {
+  if (v == null || isNaN(v)) return "healthy";
+  const t = THRESHOLDS[sensor];
+  const inRange = (r, x) => {
+    const lo = r[0], hi = r[1];
+    if (lo != null && x < lo) return false;
+    if (hi != null && x > hi) return false;
+    return true;
+  };
+  if (inRange(t.healthy, v)) return "healthy";
+  if (inRange(t.warning, v)) return "warning";
+  return "critical";
+}
+
+/* ============= FETCH HELPERS ============= */
+async function fetchJSON(url, opts = {}) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 2500);
+  try {
+    const r = await fetch(url, { ...opts, signal: ctl.signal });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+
+async function safeFetch(url) {
+  try {
+    const data = await fetchJSON(url);
+    return { ok: true, data };
+  } catch (e) {
+    return { ok: false, error: e.message || String(e) };
+  }
+}
+
+/* ============= BACKEND POLLING ============= */
+async function pollReadings() {
+  const res = await safeFetch(`${API}/readings/latest`);
+  if (!res.ok) {
+    setConn(false, res.error);
+    enterDemo("Backend unreachable");
+    return;
+  }
+  setConn(true);
+  exitDemo();
+  // expected shape: { readings: { temperature: {value,ts}, ... } } OR flat dict
+  const readings = res.data.readings || res.data;
+  const ts = Date.now();
+  SENSOR_KEYS.forEach(k => {
+    const r = readings[k];
+    if (r == null) return;
+    const v = typeof r === "object" ? r.value : r;
+    pushHistory(k, v, ts);
+  });
+}
+
+async function pollPredictions() {
+  const res = await safeFetch(`${API}/predictions/latest`);
+  if (!res.ok) return;
+  const p = res.data;
+  if (p.failure_probability != null) state.prediction.failure_probability = p.failure_probability;
+  if (p.rul_hours != null)           state.prediction.rul_hours = p.rul_hours;
+  if (p.severity)                   state.prediction.severity = p.severity;
+  if (p.component)                  state.prediction.component = p.component;
+}
+
+async function pollAlerts() {
+  const res = await safeFetch(`${API}/alerts/active`);
+  if (!res.ok) { state.alerts = []; return; }
+  const a = res.data.alerts || res.data || [];
+  state.alerts = Array.isArray(a) ? a : [];
+}
+
+function pushHistory(k, v, ts) {
+  const arr = state.history[k];
+  arr.push({ v, ts });
+  if (arr.length > state.history_maxlen) arr.shift();
+  state.latest[k] = { value: v, ts };
+}
+
+function trend(arr) {
+  if (arr.length < 2) return "flat";
+  const a = arr[arr.length - 2].v, b = arr[arr.length - 1].v;
+  const diff = b - a;
+  const mag = Math.abs(a) > 0 ? Math.abs(a) : 1;
+  if (Math.abs(diff) / mag < 0.005) return "flat";
+  return diff > 0 ? "up" : "down";
+}
+
+/* ============= DEMO MODE ============= */
+let demoT0 = Date.now();
+function enterDemo(reason) {
+  if (state.demo) return;
+  state.demo = true;
+  demoT0 = Date.now();
+  document.getElementById("demoBadge").classList.add("show");
+  setConn(false, reason || "Demo mode");
+}
+
+function exitDemo() {
+  if (!state.demo) return;
+  state.demo = false;
+  document.getElementById("demoBadge").classList.remove("show");
+}
+
+function demoStep() {
+  // 90s cycle: 0-25 healthy, 25-55 warning, 55-80 critical, 80-90 reset
+  const elapsed = ((Date.now() - demoT0) / 1000) % 90;
+  const phase =
+    elapsed < 25 ? "healthy" :
+    elapsed < 55 ? "warning" :
+    elapsed < 80 ? "critical" : "reset";
+
+  const targets = {
+    healthy:  { temperature: 62,  vibration: 0.4, oil_pressure: 4.2, hydraulic_pressure: 210, suspension_pressure: 6.2, battery_voltage: 24.1, fp: 0.05, rul: 720 },
+    warning:  { temperature: 82,  vibration: 1.1, oil_pressure: 2.0, hydraulic_pressure: 150, suspension_pressure: 4.2, battery_voltage: 21.4, fp: 0.42, rul: 96 },
+    critical: { temperature: 96,  vibration: 1.7, oil_pressure: 1.2, hydraulic_pressure: 100, suspension_pressure: 3.0, battery_voltage: 20.4, fp: 0.78, rul: 12 },
+    reset:    { temperature: 60,  vibration: 0.35,oil_pressure: 4.4, hydraulic_pressure: 215, suspension_pressure: 6.4, battery_voltage: 24.3, fp: 0.05, rul: 720 }
+  }[phase];
+
+  // Smooth interpolation between phases for realistic trends
+  const lerp = 0.08;
+  const ts = Date.now();
+  SENSOR_KEYS.forEach(k => {
+    const cur = state.history[k].length ? state.history[k][state.history[k].length - 1].v : targets[k];
+    const noise = (Math.random() - 0.5) * (k === "battery_voltage" ? 0.05 : 0.4);
+    const next = cur + (targets[k] - cur) * lerp + noise;
+    pushHistory(k, +next.toFixed(2), ts);
+  });
+  state.prediction.failure_probability += (targets.fp - state.prediction.failure_probability) * lerp;
+  state.prediction.rul_hours = +(targets.rul).toFixed(1);
+  state.prediction.severity = state.prediction.failure_probability > 0.6 ? "critical"
+                            : state.prediction.failure_probability > 0.3 ? "warning" : "healthy";
+
+  // Generate demo alerts
+  if (phase === "warning") {
+    state.alerts = [{
+      component: "Engine",
+      severity: "warning",
+      message: "Engine temperature trending above safe operating range.",
+      ts: Date.now() - 5000
+    }];
+  } else if (phase === "critical") {
+    state.alerts = [
+      { component: "Hydraulic System", severity: "critical", message: "Hydraulic pressure loss detected — risk of tipper bed failure.", ts: Date.now() - 3000 },
+      { component: "Engine",           severity: "critical", message: "Engine coolant temperature critical. Reduce load immediately.", ts: Date.now() - 8000 },
+      { component: "Axle Bearing",     severity: "warning",  message: "Vibration levels elevated at front axle.", ts: Date.now() - 12000 }
+    ];
+  } else {
+    state.alerts = [];
+  }
+}
+
+/* ============= CONNECTION INDICATOR ============= */
+function setConn(ok, msg) {
+  if (ok === state.lastConnOk) return;
+  state.lastConnOk = ok;
+  const dot = document.getElementById("connDot");
+  const txt = document.getElementById("connTxt");
+  if (ok) {
+    dot.classList.add("green");
+    txt.textContent = "MQTT Live";
+  } else {
+    dot.classList.remove("green");
+    txt.textContent = state.demo ? "Demo Mode" : "Disconnected";
+  }
+}
+
+/* ============= RENDER: SENSOR CARDS ============= */
+function renderSensors() {
+  const grid = document.getElementById("sensorGrid");
+  if (!grid.dataset.built) {
+    grid.innerHTML = SENSOR_KEYS.map(k => `
+      <div class="sensor-card healthy" data-sensor="${k}">
+        <div class="sensor-head">
+          <span class="sensor-name">${SENSOR_META[k].name}</span>
+          <span class="health-badge">OK</span>
+        </div>
+        <div class="sensor-value">
+          <span class="v" data-v="${k}">—</span>
+          <span class="u">${SENSOR_META[k].unit}</span>
+        </div>
+        <div class="sensor-trend">
+          <span class="trend-arrow flat" data-trend="${k}">→</span>
+          <canvas class="spark" data-spark="${k}" width="120" height="28"></canvas>
+        </div>
+      </div>`).join("");
+    grid.dataset.built = "1";
+
+    // Card click → drawer
+    grid.addEventListener("click", e => {
+      const card = e.target.closest(".sensor-card");
+      if (card) openDrawer(card.dataset.sensor);
+    });
+  }
+
+  // Update values
+  SENSOR_KEYS.forEach(k => {
+    const arr = state.history[k];
+    const card = grid.querySelector(`[data-sensor="${k}"]`);
+    if (!card) return;
+    const status = arr.length ? classify(k, arr[arr.length - 1].v) : "healthy";
+    card.classList.remove("healthy","warning","critical");
+    card.classList.add(status);
+
+    const badge = card.querySelector(".health-badge");
+    badge.classList.remove("amber","red");
+    if (status === "warning") { badge.classList.add("amber"); badge.textContent = "WARN"; }
+    else if (status === "critical") { badge.classList.add("red"); badge.textContent = "CRIT"; }
+    else badge.textContent = "OK";
+
+    const v = arr.length ? arr[arr.length - 1].v : null;
+    card.querySelector(`[data-v="${k}"]`).textContent = v == null ? "—" : (k === "battery_voltage" ? v.toFixed(1) : v.toFixed(1));
+
+    const arr2 = arr.slice(-20);
+    const dir = trend(arr2);
+    const arrow = card.querySelector(`[data-trend="${k}"]`);
+    arrow.classList.remove("up","down","flat");
+    arrow.classList.add(dir);
+    arrow.textContent = dir === "up" ? "▲" : dir === "down" ? "▼" : "→";
+
+    drawSpark(k, arr2, status);
+  });
+}
+
+function drawSpark(key, data, status) {
+  const canvas = document.querySelector(`[data-spark="${key}"]`);
+  if (!canvas || data.length < 2) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+
+  // Min/Max with a small headroom
+  let lo = Infinity, hi = -Infinity;
+  data.forEach(p => { if (p.v < lo) lo = p.v; if (p.v > hi) hi = p.v; });
+  const pad = (hi - lo) * 0.15 || 0.5;
+  lo -= pad; hi += pad;
+
+  const xStep = w / (data.length - 1);
+  const color = COLORS[status] || COLORS.healthy;
+
+  // Filled area
+  ctx.beginPath();
+  data.forEach((p,i) => {
+    const x = i * xStep;
+    const y = h - ((p.v - lo) / (hi - lo)) * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0, color + "55");
+  grad.addColorStop(1, color + "00");
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  data.forEach((p,i) => {
+    const x = i * xStep;
+    const y = h - ((p.v - lo) / (hi - lo)) * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = "round";
+  ctx.stroke();
+
+  // Last point dot
+  const last = data[data.length - 1];
+  const lx = (data.length - 1) * xStep;
+  const ly = h - ((last.v - lo) / (hi - lo)) * h;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(lx, ly, 2.5, 0, Math.PI*2);
+  ctx.fill();
+}
+
+/* ============= RENDER: PREDICTIONS ============= */
+function renderPredictions() {
+  const fp = state.prediction.failure_probability || 0;
+  const pct = Math.round(fp * 100);
+  const fill = document.getElementById("gaugeFill");
+  const C = 2 * Math.PI * 50; // 314.16
+  fill.style.strokeDashoffset = (C * (1 - fp)).toFixed(2);
+  const color = fp > 0.6 ? COLORS.critical : fp > 0.3 ? COLORS.warning : COLORS.healthy;
+  fill.style.stroke = color;
+  document.getElementById("gaugePct").textContent = pct + "%";
+  document.getElementById("gaugePct").style.color = color;
+
+  // Health pill
+  const health = Math.max(0, Math.min(100, Math.round(100 - fp * 100)));
+  state.healthScore = health;
+  const pill = document.getElementById("healthPill");
+  pill.classList.remove("amber","red");
+  if (health < 60) pill.classList.add("red");
+  else if (health < 85) pill.classList.add("amber");
+  pill.textContent = health + "%";
+
+  // RUL
+  const rul = state.prediction.rul_hours;
+  const rulEl = document.getElementById("rulVal");
+  const rulFill = document.getElementById("rulFill");
+  if (rul == null) {
+    rulEl.textContent = "—";
+    rulFill.style.width = "0%";
+  } else {
+    rulEl.textContent = rul.toFixed(1);
+    const norm = Math.max(0, Math.min(1, rul / 200));
+    rulFill.style.width = (norm * 100).toFixed(1) + "%";
+    rulFill.style.backgroundPosition = ((1 - norm) * 100).toFixed(0) + "% 0%";
+  }
+  const sev = state.prediction.severity || "healthy";
+  document.getElementById("rulSub").textContent =
+    `Component: ${state.prediction.component || "—"} · Severity: ${sev.toUpperCase()}`;
+
+  // Alerts
+  const al = document.getElementById("alertsList");
+  if (!state.alerts.length) {
+    al.innerHTML = `<div class="empty-state">No active alerts · system nominal</div>`;
+  } else {
+    al.innerHTML = state.alerts.slice(0,8).map(a => {
+      const sev = (a.severity || "info").toLowerCase();
+      const ts = a.ts ? new Date(a.ts).toLocaleTimeString() : "";
+      return `<div class="alert ${sev}">
+        <span class="badge">${sev}</span>
+        <div class="body">
+          <div class="comp">${a.component || "—"}</div>
+          <div class="msg">${a.message || ""}</div>
+        </div>
+        <div class="ts">${ts}</div>
+      </div>`;
+    }).join("");
+  }
+
+  // Copilot
+  const copilotText = document.getElementById("copilotText");
+  if (state.alerts.length) {
+    const top = state.alerts[0];
+    copilotText.innerHTML = `<strong>${top.component || "Alert"}:</strong> ${top.message} ` +
+      `Recommended action: ${SOP[Object.keys(SOP).find(k => (top.component||"").toLowerCase().includes(k.replace("_"," "))) || "temperature"]?.split("</strong>")[1]?.split(".")[0] || "follow standard maintenance protocol"}.`;
+  } else {
+    copilotText.textContent = "All systems nominal. Truck TRUCK1 is operating within safe parameters. No action required.";
+  }
+}
+
+/* ============= RENDER: TRUCK SCHEMATIC ============= */
+function renderTwin() {
+  const fp = state.prediction.failure_probability || 0;
+
+  // Per-node color
+  const nodeColors = {};
+  SENSOR_KEYS.forEach(k => {
+    const arr = state.history[k];
+    const v = arr.length ? arr[arr.length - 1].v : null;
+    nodeColors[k] = v == null ? "healthy" : classify(k, v);
+  });
+
+  // Apply
+  SENSOR_KEYS.forEach(k => {
+    const g = document.getElementById("node_" + k);
+    if (!g) return;
+    const st = nodeColors[k];
+    const color = COLORS[st];
+    g.classList.remove("critical");
+    if (st === "critical") g.classList.add("critical");
+    g.querySelector(".node-halo").setAttribute("fill", color);
+    g.querySelector(".node-core").setAttribute("fill", color);
+  });
+
+  // Cascade lines
+  const line1 = document.getElementById("line_engine_bearing");
+  const line2 = document.getElementById("line_bearing_oil");
+  const line3 = document.getElementById("line_oil_hydraulic");
+  const lines = [line1, line2, line3];
+  lines.forEach(l => l.classList.remove("active"));
+  if (fp > 0.3) line1.classList.add("active");
+  if (fp > 0.45) line2.classList.add("active");
+  if (fp > 0.6) line3.classList.add("active");
+
+  // Line colors
+  const lineColor = fp > 0.7 ? COLORS.critical : fp > 0.45 ? COLORS.warning : "#475569";
+  const lineWidth = fp > 0.3 ? 3 : 2;
+  lines.forEach(l => { l.setAttribute("stroke", lineColor); l.setAttribute("stroke-width", lineWidth); });
+
+  // Stress overlay
+  const stress = document.getElementById("stressOverlay");
+  if (fp > 0.6) {
+    stress.style.opacity = Math.min(1, (fp - 0.6) / 0.4).toFixed(2);
+  } else {
+    stress.style.opacity = 0;
+  }
+
+  // Chassis darken
+  document.querySelectorAll(".chassis-path").forEach(p => {
+    if (fp > 0.8) p.style.filter = "brightness(0.6) saturate(1.4)";
+    else if (fp > 0.6) p.style.filter = "brightness(0.8) saturate(1.2)";
+    else p.style.filter = "none";
+  });
+
+  // Critical banner
+  document.getElementById("critBanner").classList.toggle("show", fp > 0.8);
+
+  // Tipper bed raise at critical
+  document.getElementById("tipperBed").classList.toggle("raised", fp > 0.7);
+
+  // Exhaust particles
+  setExhaust(fp > 0.55);
+}
+
+function buildParticles() {
+  const layer = document.getElementById("particleLayer");
+  // Place particles near the exhaust top (x≈305, y≈100 in viewBox). Convert to % of twin-wrap.
+  // viewBox 0 0 900 460, twin-wrap aspect ≈ 1.95
+  layer.innerHTML = "";
+  for (let i = 0; i < 7; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = (305 / 900 * 100) + "%";
+    p.style.top  = (100 / 460 * 100) + "%";
+    p.style.animationDelay = (i * 0.32) + "s";
+    p.style.transform = `translate(${(Math.random()*30-15)}px, 0)`;
+    layer.appendChild(p);
+  }
+}
+function setExhaust(active) {
+  document.querySelectorAll(".particle").forEach(p => p.classList.toggle("active", active));
+}
+
+/* ============= RENDER: TIMELINE ============= */
+let scrubbing = false;
+let scrubValue = 100;
+function bindTimeline() {
+  const scrub = document.getElementById("scrub");
+  const play = document.getElementById("playBtn");
+  const ts = document.getElementById("scrubTime");
+  scrub.addEventListener("input", e => {
+    scrubbing = true;
+    scrubValue = +e.target.value;
+  });
+  scrub.addEventListener("change", () => {
+    setTimeout(() => { scrubbing = false; }, 200);
+  });
+  play.addEventListener("click", () => {
+    play.textContent = play.textContent === "▶" ? "⏸" : "▶";
+  });
+  setInterval(() => {
+    if (!scrubbing) {
+      scrubValue = 100;
+      scrub.value = 100;
+    }
+    const now = new Date();
+    const ago = Math.round((100 - scrubValue) * 6); // 100% = 0min ago, 0% = 10min ago
+    ts.textContent = scrubValue === 100 ? "now" : `-${ago}m ${String(now.getSeconds()).padStart(2,"0")}s`;
+  }, 500);
+}
+
+/* ============= RENDER: CLOCK / UPTIME ============= */
+function bindClock() {
+  const clock = document.getElementById("liveClock");
+  const up = document.getElementById("uptimeVal");
+  function tick() {
+    const d = new Date();
+    clock.textContent = d.toLocaleTimeString("en-GB");
+    const s = Math.floor((Date.now() - state.startTime) / 1000);
+    const h = String(Math.floor(s/3600)).padStart(2,"0");
+    const m = String(Math.floor((s%3600)/60)).padStart(2,"0");
+    const ss = String(s%60).padStart(2,"0");
+    up.textContent = `${h}:${m}:${ss}`;
+  }
+  setInterval(tick, 1000);
+  tick();
+}
+
+/* ============= DRAWER ============= */
+function openDrawer(sensor) {
+  if (!SENSOR_META[sensor]) return;
+  const d = document.getElementById("drawer");
+  const mask = document.getElementById("drawerMask");
+  document.getElementById("drawerTitle").innerHTML = `${SENSOR_META[sensor].name}<span class="sub">${SENSOR_META[sensor].pos} · ${SENSOR_META[sensor].unit}</span>`;
+  const arr = state.history[sensor];
+  const cur = arr.length ? arr[arr.length - 1].v : null;
+  const status = cur == null ? "healthy" : classify(sensor, cur);
+  document.getElementById("drawerCurrent").innerHTML = `
+    <strong>Current value:</strong> ${cur == null ? "—" : cur.toFixed(2)} ${SENSOR_META[sensor].unit}<br>
+    <strong>Status:</strong> <span style="color:${COLORS[status]}">${status.toUpperCase()}</span><br>
+    <strong>Samples:</strong> ${arr.length} of last ${state.history_maxlen}
+  `;
+
+  // Threshold legend
+  const t = THRESHOLDS[sensor];
+  const fmt = (r) => (r[0] == null ? "−∞" : r[0]) + " – " + (r[1] == null ? "+∞" : r[1]);
+  document.getElementById("thresholds").innerHTML = `
+    <div class="cell healthy">OK: ${fmt(t.healthy)}</div>
+    <div class="cell warning">WARN: ${fmt(t.warning)}</div>
+    <div class="cell critical">CRIT: ${fmt(t.critical)}</div>
+  `;
+
+  // SOP
+  document.getElementById("sopText").innerHTML = SOP[sensor] || "—";
+
+  d.classList.add("show");
+  mask.classList.add("show");
+  setTimeout(() => drawHistory(sensor, status), 60);
+}
+
+function closeDrawer() {
+  document.getElementById("drawer").classList.remove("show");
+  document.getElementById("drawerMask").classList.remove("show");
+}
+
+function drawHistory(sensor, status) {
+  const c = document.getElementById("historyChart");
+  const ctx = c.getContext("2d");
+  // Match canvas to its CSS size for crispness
+  const rect = c.getBoundingClientRect();
+  c.width = rect.width * 2;
+  c.height = rect.height * 2;
+  ctx.scale(2, 2);
+  const w = rect.width, h = rect.height;
+  ctx.clearRect(0,0,w,h);
+
+  const data = state.history[sensor].slice();
+  if (data.length < 2) {
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "12px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("Collecting data…", w/2, h/2);
+    return;
+  }
+
+  // Y range
+  let lo = Infinity, hi = -Infinity;
+  data.forEach(p => { if (p.v < lo) lo = p.v; if (p.v > hi) hi = p.v; });
+  const pad = (hi - lo) * 0.15 || 0.5;
+  lo -= pad; hi += pad;
+
+  const xStep = (w - 40) / (data.length - 1);
+  const color = COLORS[status] || COLORS.healthy;
+
+  // Background grid
+  ctx.strokeStyle = "rgba(148,163,184,0.12)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 4; i++) {
+    const y = (h - 20) * (i / 3) + 10;
+    ctx.beginPath(); ctx.moveTo(30, y); ctx.lineTo(w-10, y); ctx.stroke();
+  }
+
+  // Threshold bands
+  const t = THRESHOLDS[sensor];
+  const yFor = (val) => h - 10 - ((val - lo) / (hi - lo)) * (h - 30);
+  const drawBand = (r, fill) => {
+    if (r[0] == null || r[1] == null) return;
+    const y1 = yFor(r[1]);
+    const y2 = yFor(r[0]);
+    const top = Math.min(y1, y2), bot = Math.max(y1, y2);
+    ctx.fillStyle = fill;
+    ctx.fillRect(30, top, w - 40, bot - top);
+  };
+  // (Approximate band placement if range is bounded)
+  if (t.warning[0] != null && t.warning[1] != null) {
+    const y1 = yFor(t.warning[1]);
+    const y2 = yFor(t.warning[0]);
+    ctx.fillStyle = "rgba(245,158,11,0.07)";
+    ctx.fillRect(30, Math.min(y1,y2), w - 40, Math.abs(y2-y1));
+  }
+  if (t.critical[0] != null && t.critical[1] != null) {
+    const y1 = yFor(t.critical[1]);
+    const y2 = yFor(t.critical[0]);
+    ctx.fillStyle = "rgba(239,68,68,0.10)";
+    ctx.fillRect(30, Math.min(y1,y2), w - 40, Math.abs(y2-y1));
+  }
+
+  // Area
+  ctx.beginPath();
+  data.forEach((p,i) => {
+    const x = 30 + i * xStep;
+    const y = yFor(p.v);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(30 + (data.length-1) * xStep, h - 10);
+  ctx.lineTo(30, h - 10);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0, color + "55");
+  grad.addColorStop(1, color + "00");
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  data.forEach((p,i) => {
+    const x = 30 + i * xStep;
+    const y = yFor(p.v);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = "round";
+  ctx.stroke();
+
+  // Last point
+  const last = data[data.length - 1];
+  const lx = 30 + (data.length - 1) * xStep;
+  const ly = yFor(last.v);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(lx, ly, 4, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = "#0f172a";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "10px monospace";
+  ctx.textAlign = "right";
+  ctx.fillText(hi.toFixed(1), 26, 14);
+  ctx.fillText(lo.toFixed(1), 26, h - 4);
+  ctx.textAlign = "left";
+  ctx.fillText("now", lx - 18, h - 1);
+}
+
+/* ============= NODES CLICK ============= */
+function bindNodes() {
+  document.querySelectorAll(".node").forEach(n => {
+    n.addEventListener("click", () => openDrawer(n.dataset.sensor));
+  });
+}
+
+/* ============= INIT ============= */
+function renderAll() { renderSensors(); renderPredictions(); renderTwin(); }
+
+function start() {
+  bindClock();
+  bindTimeline();
+  bindNodes();
+  buildParticles();
+
+  document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+  document.getElementById("drawerMask").addEventListener("click", closeDrawer);
+
+  // First render
+  renderAll();
+
+  // Polling
+  pollReadings();
+  pollPredictions();
+  pollAlerts();
+  setInterval(pollReadings, 3000);
+  setInterval(pollPredictions, 5000);
+  setInterval(pollAlerts, 5000);
+
+  // Demo tick (1s) — pushes simulated data only if in demo mode
+  setInterval(() => { if (state.demo) demoStep(); }, 1000);
+
+  // Render loop
+  setInterval(renderAll, 1000);
+}
+
+document.addEventListener("DOMContentLoaded", start);
+</script>
+</body>
+</html>

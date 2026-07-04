@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EdgeGuard AI — Predictive Maintenance Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="neumorph.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="theme-color" content="#0a0e1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ============================ SIDEBAR ============================ -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+                        <path d="M4 22 L12 22 L12 14 L20 14 L20 8 L28 8" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="4" cy="22" r="2" fill="#22c55e"/>
+                        <circle cx="12" cy="22" r="2" fill="#22c55e"/>
+                        <circle cx="12" cy="14" r="2" fill="#f59e0b"/>
+                        <circle cx="20" cy="14" r="2" fill="#f59e0b"/>
+                        <circle cx="20" cy="8" r="2" fill="#ef4444"/>
+                        <circle cx="28" cy="8" r="2" fill="#ef4444"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>EdgeGuard <span>AI</span></h2>
+                    <p class="logo-sub">Predictive Maintenance</p>
+                </div>
+            </div>
+
+            <nav>
+                <ul id="sidebarNav">
+                    <li class="active" data-target="view-command">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 L9 12 L9 4 L21 4 L21 14 L15 14 L15 20 L3 20 Z"/></svg>
+                        Command Center
+                    </li>
+                    <li data-target="view-twin">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17 L5 17 L5 10 L12 10 L12 6 L19 6 L19 13 L22 13"/><circle cx="5" cy="20" r="1.5"/><circle cx="12" cy="20" r="1.5"/><circle cx="19" cy="20" r="1.5"/></svg>
+                        Digital Twin
+                    </li>
+                    <li data-target="view-fleet">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="13" height="9" rx="1"/><path d="M15 12 L20 12 L22 15 L22 18 L15 18 Z"/><circle cx="6" cy="20" r="2"/><circle cx="19" cy="20" r="2"/></svg>
+                        Fleet View
+                        <span class="nav-badge" id="fleetBadge" data-tip="Active alerts across the fleet" aria-label="Active alerts across the fleet" title="Active alerts across the fleet">3</span>
+                    </li>
+                    <li data-target="view-business">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21 L21 21"/><path d="M5 21 L5 10 L9 6 L13 10 L13 21"/><path d="M9 14 L17 14"/><path d="M13 18 L19 18"/></svg>
+                        ROI / Business
+                    </li>
+                    <li data-target="view-maintenance">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        Maintenance
+                    </li>
+                    <li data-target="view-geofence">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                        Pit Map
+                    </li>
+                    <li data-target="view-settings">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        Settings
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- AI Engines status (live indicators) -->
+            <div class="engines-strip">
+                <p class="strip-label">AI Engines</p>
+                <div class="engines-grid">
+                    <div class="engine-pip" data-engine="vision" data-tip="Engine 1 — YOLOv8n visual inspection of the tipper">
+                        <span class="pip"></span><span class="lbl">Vision</span>
+                        <span class="engine-status">Online</span>
+                    </div>
+                    <div class="engine-pip" data-engine="predict" data-tip="Engine 2 — XGBoost failure probability & RUL">
+                        <span class="pip"></span><span class="lbl">Predict</span>
+                        <span class="engine-status">Running</span>
+                    </div>
+                    <div class="engine-pip" data-engine="fusion" data-tip="Engine 3 — Multi-modal sensor fusion">
+                        <span class="pip"></span><span class="lbl">Fusion</span>
+                        <span class="engine-status">Running</span>
+                    </div>
+                    <div class="engine-pip" data-engine="business" data-tip="Engine 4 — ROI / business impact engine">
+                        <span class="pip"></span><span class="lbl">Business</span>
+                        <span class="engine-status">Healthy</span>
+                    </div>
+                    <div class="engine-pip" data-engine="copilot" data-tip="Engine 5 — Gemini-powered AI Copilot">
+                        <span class="pip"></span><span class="lbl">Copilot</span>
+                        <span class="engine-status">Online</span>
+                    </div>
+                </div>
+                <div class="engines-meta" id="enginesMeta">All engines synced · 3s ago</div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="truck-select">
+                    <label>Active Truck</label>
+                    <select id="truckSelector">
+                        <option value="truck1">Tata Signa 4825.TK (truck1)</option>
+                        <option value="truck2">Tata Signa 4825.TK (truck2)</option>
+                        <option value="truck3">Tata Signa 4825.TK (truck3)</option>
+                    </select>
+                </div>
+                <p class="footer-meta">v2.1.0 · <span id="buildHash">5-engine build</span></p>
+            </div>
+        </aside>
+
+        <!-- ============================ MAIN ============================ -->
+        <main class="main-content">
+
+            <!-- ============== COMMAND CENTER ============== -->
+            <div id="view-command" class="tab-view active">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Command Center <span class="live-tag"><span class="live-dot"></span>LIVE</span></h1>
+                        <p class="subtitle" id="lastUpdated">Awaiting telemetry...</p>
+                    </div>
+                    <div class="system-status">
+                        <div class="status-pill" id="connectionStatus">
+                            <span class="dot disconnected"></span>
+                            <span class="text">Connecting...</span>
+                        </div>
+                        <div class="status-pill ghost" id="truckStatePill">
+                            <span class="dot green"></span>
+                            <span class="text">TRUCK1 nominal</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="dashboard-grid">
+
+                    <!-- ====== Left column ====== -->
+                    <div class="left-column">
+
+                        <!-- ML Prediction card -->
+                        <section class="card ml-card glass-panel card-hero">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Predictive Maintenance</h3>
+                                    <p class="card-sub">AI Engines 2 + 3 · XGBoost + Multi-Modal Fusion</p>
+                                </div>
+                                <span class="badge normal" id="mlStatusBadge">Scanning</span>
+                            </div>
+                            <div class="ml-content">
+                                <div class="gauge-container" data-tip="Failure Risk: model probability of a critical failure within the next 24 hours">
+                                    <div class="circular-progress" id="failureProbGauge" data-state="healthy">
+                                        <div class="inner-circle">
+                                            <h2 id="failureProbValue">--</h2>
+                                            <span>Failure Risk</span>
+                                        </div>
+                                    </div>
+                                    <div class="gauge-foot">
+                                        <span class="gauge-state-tag" id="gaugeStateTag">Healthy</span>
+                                    </div>
+                                </div>
+                                <div class="ml-details">
+                                    <div class="detail-row">
+                                        <div class="detail-item" data-tip="Estimated operating hours before the at-risk component needs service">
+                                            <span class="label">Remaining Useful Life</span>
+                                            <h3 id="rulValue">-- <small>hrs</small></h3>
+                                        </div>
+                                        <div class="detail-item" data-tip="Component predicted to fail first, based on multi-sensor fusion">
+                                            <span class="label">Component at Risk</span>
+                                            <h3 id="componentValue" class="component">--</h3>
+                                        </div>
+                                    </div>
+                                    <div class="copilot-box">
+                                        <div class="copilot-header">
+                                            <span class="copilot-sparkle">✦</span> EdgeGuard Copilot
+                                            <span class="copilot-engine" id="copilotEngineTag">Engine 5 · Gemini</span>
+                                        </div>
+                                        <p id="copilotExplanation">Waiting for telemetry data...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Prediction trend -->
+                            <div class="trend-strip">
+                                <div class="trend-header">
+                                    <span class="trend-label">Failure Probability · last 50 predictions</span>
+                                    <span class="trend-meta" id="trendMeta">awaiting history...</span>
+                                </div>
+                                <div class="trend-chart-wrap">
+                                    <canvas id="predictionTrend"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Sensor charts -->
+                        <section class="telemetry-section">
+                            <div class="section-title-row">
+                                <h3>Live Telemetry</h3>
+                                <div class="section-actions">
+                                    <span class="live-tag small"><span class="live-dot"></span>3s polling</span>
+                                </div>
+                            </div>
+                            <div class="charts-grid" id="chartsGrid">
+                                <div class="chart-card" data-sensor="temperature">
+                                    <div class="chart-head">
+                                        <h4>Temperature <span class="unit">°C</span></h4>
+                                        <span class="status-tag healthy" id="status-temperature">OK</span>
+                                    </div>
+                                    <div class="current-value" id="val-temperature" data-tip="Engine coolant temperature in Celsius. Warning > 75°C, critical > 90°C.">--</div>
+                                    <div class="chart-canvas-wrap"><canvas id="chart-temperature"></canvas></div>
+                                    <div class="chart-bar"><div class="chart-bar-fill" id="bar-temperature"></div></div>
+                                </div>
+                                <div class="chart-card" data-sensor="vibration">
+                                    <div class="chart-head">
+                                        <h4>Vibration <span class="unit">g</span></h4>
+                                        <span class="status-tag healthy" id="status-vibration">OK</span>
+                                    </div>
+                                    <div class="current-value" id="val-vibration" data-tip="Axle bearing vibration in g-force. Warning > 0.8g, critical > 1.5g.">--</div>
+                                    <div class="chart-canvas-wrap"><canvas id="chart-vibration"></canvas></div>
+                                    <div class="chart-bar"><div class="chart-bar-fill" id="bar-vibration"></div></div>
+                                </div>
+                                <div class="chart-card" data-sensor="oil_pressure">
+                                    <div class="chart-head">
+                                        <h4>Oil Pressure <span class="unit">bar</span></h4>
+                                        <span class="status-tag healthy" id="status-oil_pressure">OK</span>
+                                    </div>
+                                    <div class="current-value" id="val-oil_pressure" data-tip="Engine oil pressure in bar. Warning < 2.5 bar, critical < 1.5 bar.">--</div>
+                                    <div class="chart-canvas-wrap"><canvas id="chart-oil_pressure"></canvas></div>
+                                    <div class="chart-bar"><div class="chart-bar-fill" id="bar-oil_pressure"></div></div>
+                                </div>
+                                <div class="chart-card" data-sensor="hydraulic_pressure">
+                                    <div class="chart-head">
+                                        <h4>Hydraulic <span class="unit">bar</span></h4>
+                                        <span class="status-tag healthy" id="status-hydraulic_pressure">OK</span>
+                                    </div>
+                                    <div class="current-value" id="val-hydraulic_pressure" data-tip="Tipper hydraulic pressure in bar. Warning < 180 bar, critical < 120 bar.">--</div>
+                                    <div class="chart-canvas-wrap"><canvas id="chart-hydraulic_pressure"></canvas></div>
+                                    <div class="chart-bar"><div class="chart-bar-fill" id="bar-hydraulic_pressure"></div></div>
+                                </div>
+                                <div class="chart-card" data-sensor="suspension_pressure">
+                                    <div class="chart-head">
+                                        <h4>Suspension <span class="unit">bar</span></h4>
+                                        <span class="status-tag healthy" id="status-suspension_pressure">OK</span>
+                                    </div>
+                                    <div class="current-value" id="val-suspension_pressure" data-tip="Air-suspension pressure in bar. Warning < 5 bar, critical < 3.5 bar.">--</div>
+                                    <div class="chart-canvas-wrap"><canvas id="chart-suspension_pressure"></canvas></div>
+                                    <div class="chart-bar"><div class="chart-bar-fill" id="bar-suspension_pressure"></div></div>
+                                </div>
+                                <div class="chart-card" data-sensor="battery_voltage">
+                                    <div class="chart-head">
+                                        <h4>Battery <span class="unit">V</span></h4>
+                                        <span class="status-tag healthy" id="status-battery_voltage">OK</span>
+                                    </div>
+                                    <div class="current-value" id="val-battery_voltage" data-tip="Battery voltage in V. Warning < 22V, critical < 21V.">--</div>
+                                    <div class="chart-canvas-wrap"><canvas id="chart-battery_voltage"></canvas></div>
+                                    <div class="chart-bar"><div class="chart-bar-fill" id="bar-battery_voltage"></div></div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- ====== Right column ====== -->
+                    <div class="right-column">
+                        <!-- Health score -->
+                        <section class="card glass-panel health-summary card-secondary">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Fleet Health</h3>
+                                    <p class="card-sub" id="healthSubtitle">All parameters nominal</p>
+                                </div>
+                                <span class="badge normal" id="overallHealthBadge">Operational</span>
+                            </div>
+                            <div class="health-body">
+                                <div class="health-main">
+                                    <div class="big-score" id="bigScore">100<span>%</span></div>
+                                    <div class="health-ring" id="healthRing" data-state="healthy">
+                                        <svg viewBox="0 0 36 36" class="health-ring-svg">
+                                            <path class="health-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                            <path class="health-ring-fill" id="healthRingFill" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="100, 100" stroke-dashoffset="0"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="health-mini-stats">
+                                    <div class="mini-stat" data-tip="Number of unacknowledged critical and high severity alerts">
+                                        <span class="mini-val" id="statActiveAlerts">0</span>
+                                        <span class="mini-lbl">Active Alerts</span>
+                                    </div>
+                                    <div class="mini-stat" data-tip="Estimated remaining useful life of the at-risk component">
+                                        <span class="mini-val" id="statRul">—</span>
+                                        <span class="mini-lbl">Hrs RUL</span>
+                                    </div>
+                                    <div class="mini-stat" data-tip="Number of SOPs available in the maintenance knowledge base. Shows 0 loaded when the knowledge base has not been fetched yet.">
+                                        <span class="mini-val" id="statSops">0 loaded</span>
+                                        <span class="mini-lbl">SOPs Loaded</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Active alerts -->
+                        <section class="card alerts-card card-secondary">
+                            <div class="card-header">
+                                <div>
+                                    <h3>Active Alerts</h3>
+                                    <p class="card-sub" id="alertSub">Monitoring 6 sensor streams</p>
+                                </div>
+                                <span class="alert-count" id="alertCount">0</span>
+                            </div>
+                            <div class="alerts-list" id="alertsList">
+                                <div class="empty-state" id="alertsEmpty">
+                                    <div class="empty-icon">
+                                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <h4 class="empty-title" id="alertsHealthyTitle" data-tip="Sensor alert status only — based on live telemetry thresholds, not individual AI engine connectivity.">System Healthy</h4>
+                                    <p class="empty-text">No active alerts across all sensors. All parameters within nominal range.</p>
+                                    <p class="empty-health-note" id="alertsEngineNote" hidden>Sensor status is independent of AI engine connectivity — Engine 1 (Vision) may be offline while sensors remain nominal.</p>
+                                    <div class="empty-meta" aria-label="Alert panel uptime and last alert">
+                                        <div class="empty-meta-row">
+                                            <span class="empty-meta-lbl">Uptime</span>
+                                            <span class="empty-meta-val mono" id="alertsUptime">00:00:00</span>
+                                        </div>
+                                        <div class="empty-meta-row">
+                                            <span class="empty-meta-lbl">Last alert</span>
+                                            <span class="empty-meta-val mono" id="alertsLastTime">none recorded</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============== DIGITAL TWIN ============== -->
+            <div id="view-twin" class="tab-view">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Digital Twin · TRUCK1</h1>
+                        <p class="subtitle">Real-time sensor overlay on tipper geometry · click any node</p>
+                    </div>
+                    <div class="system-status">
+                        <button class="status-pill ghost" id="twin3dToggle" title="Switch to 3D view">
+                            <span class="text">3D</span>
+                        </button>
+                        <div class="status-pill ghost">
+                            <span class="dot green"></span>
+                            <span class="text" id="twinSync">synced 3s ago</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="twin-layout">
+                    <section class="card glass-panel twin-panel">
+                        <div class="twin-wrap" id="twinWrap">
+                            <div class="critical-banner" id="critBanner">⚠ CRITICAL FAILURE IMMINENT ⚠</div>
+                            <div class="particle-layer" id="particleLayer"></div>
+
+                            <!-- 2D SVG truck (default, always available) -->
+                            <svg class="twin-svg" id="twinSvg" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet">
+                                <defs>
+                                    <linearGradient id="bedGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#5b6b85"/><stop offset="1" stop-color="#2f3a52"/>
+                                    </linearGradient>
+                                    <linearGradient id="cabGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#1e40af"/>
+                                    </linearGradient>
+                                    <linearGradient id="chassisGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/>
+                                    </linearGradient>
+                                    <radialGradient id="wheelGrad" cx="0.5" cy="0.5" r="0.5">
+                                        <stop offset="0" stop-color="#1f2937"/><stop offset="0.6" stop-color="#0f172a"/><stop offset="1" stop-color="#000"/>
+                                    </radialGradient>
+                                    <linearGradient id="ramGrad" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0" stop-color="#94a3b8"/><stop offset="0.5" stop-color="#e2e8f0"/><stop offset="1" stop-color="#94a3b8"/>
+                                    </linearGradient>
+                                    <filter id="chassisShadow"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="0" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                    <symbol id="wheel" viewBox="-50 -50 100 100">
+                                        <circle r="48" fill="url(#wheelGrad)" stroke="#334155" stroke-width="2"/>
+                                        <circle r="32" fill="none" stroke="#475569" stroke-width="2"/>
+                                        <circle r="14" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                                        <g stroke="#64748b" stroke-width="2.5" stroke-linecap="round">
+                                            <line x1="0" y1="-32" x2="0" y2="32"/><line x1="-32" y1="0" x2="32" y2="0"/>
+                                            <line x1="-22" y1="-22" x2="22" y2="22"/><line x1="-22" y1="22" x2="22" y2="-22"/>
+                                        </g>
+                                        <circle r="5" fill="#cbd5e1"/>
+                                    </symbol>
+                                </defs>
+
+                                <g id="truckBody">
+                                    <g class="tipper-bed" id="tipperBed">
+                                        <path d="M 470 220 L 830 220 L 850 260 L 830 300 L 470 300 Z" fill="url(#bedGrad)" stroke="#0f172a" stroke-width="2" class="chassis-path"/>
+                                        <path d="M 470 220 L 830 220 L 850 220 L 850 218 L 470 218 Z" fill="#94a3b8" opacity="0.7"/>
+                                        <g stroke="#1e293b" stroke-width="1.5" opacity="0.6">
+                                            <line x1="540" y1="220" x2="540" y2="300"/><line x1="610" y1="220" x2="610" y2="300"/>
+                                            <line x1="680" y1="220" x2="680" y2="300"/><line x1="750" y1="220" x2="750" y2="300"/>
+                                        </g>
+                                        <path d="M 830 220 L 850 260 L 850 300 L 820 300 Z" fill="#3b475e" stroke="#0f172a" stroke-width="1.5"/>
+                                    </g>
+
+                                    <g id="hydraulicRam">
+                                        <line x1="490" y1="305" x2="640" y2="345" stroke="#64748b" stroke-width="3"/>
+                                        <rect x="610" y="320" width="120" height="20" rx="3" fill="url(#ramGrad)" stroke="#475569" stroke-width="1.5"/>
+                                        <line x1="610" y1="320" x2="610" y2="340" stroke="#475569" stroke-width="1"/>
+                                        <line x1="730" y1="320" x2="730" y2="340" stroke="#475569" stroke-width="1"/>
+                                        <circle cx="610" cy="330" r="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1"/>
+                                        <circle cx="730" cy="330" r="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1"/>
+                                    </g>
+
+                                    <rect x="120" y="280" width="710" height="30" rx="4" fill="url(#chassisGrad)" class="chassis-path" filter="url(#chassisShadow)"/>
+                                    <g fill="#334155">
+                                        <rect x="220" y="305" width="8" height="20"/><rect x="380" y="305" width="8" height="20"/>
+                                        <rect x="540" y="305" width="8" height="20"/><rect x="720" y="305" width="8" height="20"/>
+                                    </g>
+
+                                    <g id="cabGroup">
+                                        <path d="M 110 160 L 290 160 L 305 200 L 305 285 L 110 285 Z" fill="url(#cabGrad)" stroke="#0f172a" stroke-width="2" class="chassis-path"/>
+                                        <path d="M 110 160 L 290 160 L 285 168 L 115 168 Z" fill="#60a5fa" opacity="0.5"/>
+                                        <path d="M 130 178 L 195 178 L 200 210 L 130 210 Z" fill="#0ea5e9" opacity="0.85" stroke="#1e3a8a" stroke-width="1.5"/>
+                                        <line x1="162" y1="178" x2="167" y2="210" stroke="#1e3a8a" stroke-width="1"/>
+                                        <rect x="220" y="178" width="60" height="32" fill="#0ea5e9" opacity="0.7" stroke="#1e3a8a" stroke-width="1.5"/>
+                                        <line x1="270" y1="240" x2="285" y2="240" stroke="#cbd5e1" stroke-width="2"/>
+                                        <line x1="210" y1="220" x2="210" y2="285" stroke="#1e3a8a" stroke-width="1.5"/>
+                                        <ellipse cx="118" cy="240" rx="6" ry="8" fill="#fde047" stroke="#facc15" stroke-width="1"/>
+                                        <rect x="105" y="260" width="20" height="22" fill="#475569" stroke="#0f172a" stroke-width="1.5"/>
+                                        <rect x="115" y="285" width="50" height="6" fill="#334155"/>
+                                    </g>
+
+                                    <g id="exhaustGroup">
+                                        <line x1="305" y1="180" x2="305" y2="100" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+                                        <line x1="305" y1="180" x2="305" y2="100" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+                                        <ellipse cx="305" cy="100" rx="10" ry="3" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                                    </g>
+
+                                    <g stroke="#64748b" stroke-width="2" fill="none">
+                                        <path d="M 720 310 L 720 335 L 760 350"/><path d="M 580 310 L 580 335 L 540 350"/>
+                                    </g>
+                                    <g stroke="#94a3b8" stroke-width="1.5">
+                                        <line x1="580" y1="335" x2="540" y2="350"/><line x1="720" y1="335" x2="760" y2="350"/>
+                                    </g>
+                                    <g stroke="#64748b" stroke-width="2" fill="none">
+                                        <path d="M 200 310 L 200 335 L 220 350"/>
+                                    </g>
+
+                                    <rect x="170" y="275" width="40" height="20" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+                                    <rect x="174" y="278" width="32" height="4" fill="#475569"/>
+                                    <text x="190" y="291" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">12V</text>
+
+                                    <use href="#wheel" x="200" y="350" width="100" height="100"/>
+                                    <use href="#wheel" x="560" y="350" width="100" height="100"/>
+                                    <use href="#wheel" x="740" y="350" width="100" height="100"/>
+
+                                    <ellipse cx="450" cy="425" rx="420" ry="8" fill="rgba(0,0,0,0.45)"/>
+
+                                    <g class="stress-overlay" id="stressOverlay">
+                                        <path d="M 200 285 L 280 285" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.7"/>
+                                        <path d="M 470 285 L 600 285" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.7"/>
+                                        <path d="M 720 285 L 830 285" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.7"/>
+                                        <path d="M 130 220 L 130 270" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" opacity="0.5"/>
+                                        <circle cx="200" cy="350" r="55" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+                                        <circle cx="560" cy="350" r="55" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+                                        <circle cx="740" cy="350" r="55" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+                                        <text x="450" y="445" text-anchor="middle" font-family="monospace" font-size="11" fill="#ef4444" font-weight="700" letter-spacing="1.5">STRUCTURAL STRESS DETECTED</text>
+                                    </g>
+                                </g>
+
+                                <g id="cascadeGroup" fill="none" stroke-width="2.5" stroke-linecap="round">
+                                    <line class="cascade-line" id="line_engine_bearing" x1="180" y1="220" x2="200" y2="350"/>
+                                    <line class="cascade-line" id="line_bearing_oil" x1="200" y1="350" x2="240" y2="260"/>
+                                    <line class="cascade-line" id="line_oil_hydraulic" x1="240" y1="260" x2="660" y2="320"/>
+                                </g>
+
+                                <g id="nodesGroup">
+                                    <g class="node" id="node_temperature" data-sensor="temperature">
+                                        <circle class="node-halo" cx="200" cy="220" r="14" fill="#22c55e" opacity="0.4"/>
+                                        <circle class="node-core" cx="200" cy="220" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+                                        <text class="node-label" x="200" y="200">ENGINE</text>
+                                    </g>
+                                    <g class="node" id="node_vibration" data-sensor="vibration">
+                                        <circle class="node-halo" cx="200" cy="370" r="14" fill="#22c55e" opacity="0.4"/>
+                                        <circle class="node-core" cx="200" cy="370" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+                                        <text class="node-label" x="200" y="395">BEARING</text>
+                                    </g>
+                                    <g class="node" id="node_oil_pressure" data-sensor="oil_pressure">
+                                        <circle class="node-halo" cx="240" cy="260" r="14" fill="#22c55e" opacity="0.4"/>
+                                        <circle class="node-core" cx="240" cy="260" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+                                        <text class="node-label" x="240" y="282">OIL</text>
+                                    </g>
+                                    <g class="node" id="node_hydraulic_pressure" data-sensor="hydraulic_pressure">
+                                        <circle class="node-halo" cx="660" cy="330" r="14" fill="#22c55e" opacity="0.4"/>
+                                        <circle class="node-core" cx="660" cy="330" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+                                        <text class="node-label" x="660" y="352">HYD</text>
+                                    </g>
+                                    <g class="node" id="node_suspension_pressure" data-sensor="suspension_pressure">
+                                        <circle class="node-halo" cx="560" cy="370" r="14" fill="#22c55e" opacity="0.4"/>
+                                        <circle class="node-core" cx="560" cy="370" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2"/>
+                                        <text class="node-label" x="560" y="395">SUSP</text>
+                                    </g>
+                                    <g class="node" id="node_battery_voltage" data-sensor="battery_voltage">
+                                        <circle class="node-halo" cx="190" cy="290" r="11" fill="#22c55e" opacity="0.4"/>
+                                        <circle class="node-core" cx="190" cy="290" r="7" fill="#22c55e" stroke="#0f172a" stroke-width="1.5"/>
+                                        <text class="node-label" x="190" y="313">BATT</text>
+                                    </g>
+                                </g>
+                            </svg>
+
+                            <!-- 3D Three.js canvas (hidden by default, toggled by 3D button) -->
+                            <canvas class="twin-canvas-3d" id="twinCanvas3D"></canvas>
+                        </div>
+                    </section>
+
+                    <aside class="card glass-panel twin-readout">
+                        <div class="card-header">
+                            <h3>Live Readout</h3>
+                            <span class="live-tag small"><span class="live-dot"></span>3s</span>
+                        </div>
+                        <div class="readout-grid" id="twinReadout"></div>
+
+                        <div class="twin-prediction-strip">
+                            <div class="ps-label">Failure Probability</div>
+                            <div class="ps-row">
+                                <div class="ps-big" id="twinProb">—</div>
+                                <div class="ps-bar"><div class="ps-fill" id="twinProbFill"></div></div>
+                            </div>
+                            <div class="ps-label">RUL</div>
+                            <div class="ps-rul" id="twinRul">— hrs</div>
+                        </div>
+
+                        <div class="copilot-box small" id="twinCopilot">
+                            <div class="copilot-header">
+                                <span class="copilot-sparkle">✦</span> Twin Copilot
+                            </div>
+                            <p>Click any node to inspect a sensor's history and SOP.</p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- ============== FLEET VIEW ============== -->
+            <div id="view-fleet" class="tab-view">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Fleet View</h1>
+                        <p class="subtitle">Multi-truck health overview · <span id="fleetCount">3</span> tippers monitored</p>
+                    </div>
+                    <div class="system-status">
+                        <div class="status-pill ghost">
+                            <span class="dot green"></span>
+                            <span class="text" id="fleetConn">aggregator online</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="fleet-grid" id="fleetGrid">
+                    <!-- Truck cards injected by JS -->
+                </div>
+
+                <div class="fleet-summary">
+                    <h3 class="summary-title">Fleet Aggregates</h3>
+                    <div class="kpi-row" id="fleetKpis">
+                        <div class="kpi-card">
+                            <div class="kpi-lbl">Average Health</div>
+                            <div class="kpi-val" id="kpiAvgHealth">—</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-lbl">Total Active Alerts</div>
+                            <div class="kpi-val" id="kpiAlerts">—</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-lbl">Trucks at Risk</div>
+                            <div class="kpi-val" id="kpiAtRisk">—</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-lbl">Est. Downtime Avoided (hr)</div>
+                            <div class="kpi-val" id="kpiDowntimeAvoided">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============== BUSINESS / ROI ============== -->
+            <div id="view-business" class="tab-view">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Business Impact · ROI</h1>
+                        <p class="subtitle">Engine 4 · Predictive Maintenance translated to INR</p>
+                    </div>
+                    <div class="system-status">
+                        <div class="status-pill ghost">
+                            <span class="dot green"></span>
+                            <span class="text">Engine 4 online</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Big ROI banner -->
+                <section class="card glass-panel roi-banner">
+                    <div class="roi-left">
+                        <div class="roi-eyebrow">Estimated 12-month ROI for a 5-truck pilot</div>
+                        <div class="roi-big" id="roiBig">—<span>x</span></div>
+                        <div class="roi-subtitle" id="roiSubtitle">Payback period <strong id="payback">—</strong> months</div>
+                    </div>
+                    <div class="roi-right">
+                        <div class="roi-money">
+                            <div class="money-lbl">Net Savings</div>
+                            <div class="money-val" id="moneyNet">—</div>
+                        </div>
+                        <div class="roi-money">
+                            <div class="money-lbl">Avoided Downtime</div>
+                            <div class="money-val" id="moneyAvoided">—</div>
+                        </div>
+                        <div class="roi-money">
+                            <div class="money-lbl">Platform Cost</div>
+                            <div class="money-val" id="moneyCost">—</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6 KPI cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card-detailed">
+                        <div class="kc-icon">⏱</div>
+                        <div class="kc-lbl">Downtime Avoided</div>
+                        <div class="kc-val" id="kpiDtAvoided">—</div>
+                        <div class="kc-sub">hours / year</div>
+                    </div>
+                    <div class="kpi-card-detailed">
+                        <div class="kc-icon">💰</div>
+                        <div class="kc-lbl">Revenue Protected</div>
+                        <div class="kc-val" id="kpiRevenue">—</div>
+                        <div class="kc-sub">lost production avoided</div>
+                    </div>
+                    <div class="kpi-card-detailed">
+                        <div class="kc-icon">🛠</div>
+                        <div class="kc-lbl">Maintenance Cost Saved</div>
+                        <div class="kc-val" id="kpiMaint">—</div>
+                        <div class="kc-sub">planned vs unplanned</div>
+                    </div>
+                    <div class="kpi-card-detailed">
+                        <div class="kc-icon">⛽</div>
+                        <div class="kc-lbl">Fuel Cost Saved</div>
+                        <div class="kc-val" id="kpiFuel">—</div>
+                        <div class="kc-sub">efficiency gains</div>
+                    </div>
+                    <div class="kpi-card-detailed">
+                        <div class="kc-icon">📈</div>
+                        <div class="kc-lbl">Utilization Uplift</div>
+                        <div class="kc-val" id="kpiUtil">—</div>
+                        <div class="kc-sub">truck availability</div>
+                    </div>
+                    <div class="kpi-card-detailed">
+                        <div class="kc-icon">🛡</div>
+                        <div class="kc-lbl">Catastrophic Failures Avoided</div>
+                        <div class="kc-val" id="kpiCatastrophic">—</div>
+                        <div class="kc-sub">per year</div>
+                    </div>
+                </div>
+
+                <div class="biz-grid">
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>Cost-Savings Breakdown</h3></div>
+                        <div class="biz-chart-wrap"><canvas id="bizChart"></canvas></div>
+                    </section>
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>Assumptions</h3></div>
+                        <div class="assumption-list" id="assumptionList"></div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- ============== MAINTENANCE ============== -->
+            <div id="view-maintenance" class="tab-view">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Maintenance & SOP Reference</h1>
+                        <p class="subtitle">RAG-powered Standard Operating Procedures for Tata Signa 4825.TK</p>
+                    </div>
+                    <div class="system-status">
+                        <div class="sop-stat-pills">
+                            <span class="stat-pill" id="sopTotalCount"><span class="stat-number">--</span> SOPs</span>
+                            <span class="stat-pill stat-critical" id="sopCriticalCount"><span class="stat-number">--</span> Critical</span>
+                            <span class="stat-pill stat-warning" id="sopWarningCount"><span class="stat-number">--</span> Warning</span>
+                            <span class="stat-pill stat-preventive" id="sopPreventiveCount"><span class="stat-number">--</span> Preventive</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="maintenance-controls">
+                    <div class="search-container glass-panel">
+                        <div class="search-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </div>
+                        <input type="text" id="sopSearchInput" placeholder="Search SOPs… (e.g. 'hydraulic pressure high', 'engine overheating')" autocomplete="off">
+                        <div class="search-badge" id="searchResultCount"><span>0</span> results</div>
+                        <button class="search-clear-btn" id="sopSearchClear" title="Clear search">✕</button>
+                    </div>
+                    <div class="component-filters" id="componentFilters">
+                        <button class="filter-pill active" data-component="all">
+                            <span class="filter-dot all"></span> All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="maintenance-grid">
+                    <div class="sop-cards-column">
+                        <div class="sop-cards-grid" id="sopCardsGrid">
+                            <div class="sop-loading"><div class="sop-loading-spinner"></div><p>Loading SOP knowledge base...</p></div>
+                        </div>
+                    </div>
+                    <div class="maintenance-sidebar">
+                        <section class="card glass-panel sop-detail-card" id="sopDetailCard">
+                            <div class="card-header">
+                                <h3>SOP Detail</h3>
+                                <button class="close-detail-btn" id="closeSopDetail">✕</button>
+                            </div>
+                            <div class="sop-detail-content" id="sopDetailContent"></div>
+                        </section>
+                        <section class="card glass-panel alert-timeline-card">
+                            <div class="card-header">
+                                <h3>Alert → SOP Timeline</h3>
+                                <span class="badge normal" id="timelineAlertCount">0</span>
+                            </div>
+                            <div class="alert-timeline" id="alertTimeline">
+                                <div class="empty-state">No recent alerts with SOP references.</div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============== GEOFENCE / PIT MAP ============== -->
+            <div id="view-geofence" class="tab-view">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Pit Map · Live Fleet</h1>
+                        <p class="subtitle">Geofence of 3 mining pits · truck health color-coded · click marker to switch</p>
+                    </div>
+                    <div class="system-status">
+                        <div class="status-pill ghost"><span class="dot green"></span><span class="text">OSM tiles</span></div>
+                    </div>
+                </header>
+                <div class="twin-layout single-col">
+                    <section class="card glass-panel">
+                        <div id="geoMap"></div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- ============== SETTINGS ============== -->
+            <div id="view-settings" class="tab-view">
+                <header class="topbar">
+                    <div class="page-title">
+                        <h1>Settings</h1>
+                        <p class="subtitle">System configuration · persisted to localStorage</p>
+                    </div>
+                </header>
+
+                <div class="settings-grid">
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>Backend & Connectivity</h3></div>
+                        <div class="setting-row">
+                            <label>Backend URL</label>
+                            <input type="text" id="setBackendUrl" value="http://localhost:8000">
+                        </div>
+                        <div class="setting-row">
+                            <label>Poll Interval (s)</label>
+                            <input type="number" id="setPollInterval" min="1" max="30" step="1" value="2">
+                        </div>
+                        <div class="setting-row">
+                            <label>Active Truck ID</label>
+                            <input type="text" id="setTruckId" value="truck1">
+                        </div>
+                        <div class="setting-actions">
+                            <button class="btn primary" id="saveSettings">Save</button>
+                            <button class="btn" id="testBackendBtn">Test Connection</button>
+                            <span class="test-result" id="testResult"></span>
+                        </div>
+                    </section>
+
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>Live Experience</h3></div>
+                        <div class="setting-row">
+                            <label>Voice alerts on critical events</label>
+                            <label class="switch">
+                                <input type="checkbox" id="voiceToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <label>3D Digital Twin (Three.js)</label>
+                            <label class="switch">
+                                <input type="checkbox" id="twin3dPref">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <label>Real-time WebSocket stream</label>
+                            <label class="switch">
+                                <input type="checkbox" id="wsPref" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>Alert Thresholds</h3></div>
+                        <div class="setting-row">
+                            <label>Failure Probability Alert Threshold</label>
+                            <div class="range-row">
+                                <input type="range" id="setAlertThreshold" min="0.3" max="0.95" step="0.05" value="0.7">
+                                <span class="range-val" id="setAlertThresholdVal">0.70</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <label>Demo Mode (simulate when offline)</label>
+                            <label class="switch"><input type="checkbox" id="setDemoMode" checked><span class="slider"></span></label>
+                        </div>
+                        <div class="setting-row">
+                            <label>Sound on Critical</label>
+                            <label class="switch"><input type="checkbox" id="setSoundAlerts"><span class="slider"></span></label>
+                        </div>
+                    </section>
+
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>Business Assumptions</h3></div>
+                        <div class="setting-row"><label>Hourly Revenue / Truck (INR)</label><input type="number" id="setHourlyRevenue" value="18000" step="1000"></div>
+                        <div class="setting-row"><label>Platform Cost / Year (INR)</label><input type="number" id="setPlatformCost" value="6000000" step="100000"></div>
+                        <div class="setting-row"><label>Unplanned Downtime Cost / hr (INR)</label><input type="number" id="setDowntimeCost" value="35000" step="1000"></div>
+                        <div class="setting-row"><label>Fuel Cost / Litre (INR)</label><input type="number" id="setFuelCost" value="95" step="1"></div>
+                    </section>
+
+                    <section class="card glass-panel">
+                        <div class="card-header"><h3>System Info</h3></div>
+                        <div class="info-row"><span>Version</span><span class="mono">2.1.0</span></div>
+                        <div class="info-row"><span>Build</span><span class="mono">5-engine · Gemini RAG</span></div>
+                        <div class="info-row"><span>Active Truck</span><span class="mono" id="infoTruckId">truck1</span></div>
+                        <div class="info-row"><span>Last backend poll</span><span class="mono" id="infoLastPoll">never</span></div>
+                        <div class="info-row"><span>Local storage</span><span class="mono" id="infoStorage">0 KB</span></div>
+                        <div class="setting-actions">
+                            <button class="btn danger" id="resetSettings">Reset to defaults</button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ============== Twin drawer ============== -->
+    <div class="drawer-mask" id="drawerMask"></div>
+    <aside class="drawer" id="drawer" aria-hidden="true">
+        <div class="drawer-head">
+            <h3 id="drawerTitle">Sensor<span class="sub" id="drawerSub">Click a node or card</span></h3>
+            <button class="drawer-close" id="drawerClose" aria-label="Close">✕</button>
+        </div>
+        <div class="drawer-body">
+            <h4>Current Reading</h4>
+            <div class="sop-text" id="drawerCurrent">—</div>
+            <h4>History (last 20 readings)</h4>
+            <canvas class="history-chart" id="historyChart" width="800" height="360"></canvas>
+            <h4>Threshold Map</h4>
+            <div class="threshold-legend" id="thresholds"></div>
+            <h4>Recommended Action (SOP)</h4>
+            <div class="sop-text" id="sopText">—</div>
+        </div>
+    </aside>
+
+    <script src="app.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    </script>
+</body>
+</html>
